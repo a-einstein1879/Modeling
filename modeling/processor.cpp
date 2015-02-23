@@ -11,8 +11,8 @@ Processor::Processor() {
 };
 
 void Processor::Tick() {
-	gui->tick();
 	hippocampus->tick();
+	gui->tick();
 };
 
 void Processor::Run() {

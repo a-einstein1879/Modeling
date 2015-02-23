@@ -12,6 +12,7 @@ private:
 	int neuronType[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	int neuronIds[NUMBEROFCELLSX][NUMBEROFCELLSY];
 
+	void checkStack();
 	int  addNeuron(int x = -1, int y = -1);
 	void fillField(int x, int y, char type, int neuronId);
 	void createNeuron();

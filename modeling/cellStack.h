@@ -5,16 +5,19 @@
 
 class CellStack {
 private:
+	static CellStack *p_CellStack;
 	int numberOfCells;
-	Coordinates *coordinates;
-	int *cellType;
+	//TODO: Use cells struct instead of this
+	struct Cell *cells;
 public:
 	CellStack();
 	~CellStack();
+	static CellStack* getStack();
 	int stackPush(struct Cell cell);
 	struct Cell stackPull();
 	bool isEmpty();
 	bool isFull();
+	void PrintStack();
 };
 
 #endif

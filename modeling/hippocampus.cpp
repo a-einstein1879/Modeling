@@ -17,6 +17,21 @@ Hippocampus::Hippocampus() {
 			neuronIds[i][j] = 0;
 };
 
+#include "cellStack.h"
+void Hippocampus::checkStack() {
+	CellStack *cellStack = cellStack->getStack();
+	while(!cellStack->isEmpty()) {
+		Cell cell = cellStack->stackPull();
+		if(neuronType[cell.coordinates.GetX()][cell.coordinates.GetY()] == NOTHING) {
+			// Case field is clear
+            TRACE("Hippocampus", "cell.cellType = %d, cell.NeuronId = %d)\n", cell.cellType, cell.NeuronId);
+			fillField(cell.coordinates.GetX(), cell.coordinates.GetY(), cell.cellType, cell.NeuronId);
+		} else {
+			// Case we need to create a new connection
+		}
+	}
+};
+
 int Hippocampus::addNeuron(int x, int y) { //TODO: fix recursive bug. Add counter to prevent loop
    if (numberOfNeurons < MAXNUMBEROFNEURONS) {
       bool availability = false, randomity = false;
@@ -73,7 +88,8 @@ void Hippocampus::tick() {
 	TRACE("Hippocampus", "Hippocampus tick\n");
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
-	addNeuron(10, 10);
+	checkStack();
+	if(numberOfNeurons == 0) {addNeuron(10, 5); addNeuron(10, 10);}
 };
 
 int Hippocampus::getFieldType(int x, int y) {
