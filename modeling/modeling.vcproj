@@ -170,7 +170,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cmn_struct.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\coordinates.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\environment.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\growthCone.cpp"
 				>
 			</File>
 			<File

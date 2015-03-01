@@ -6,15 +6,15 @@
 
 class GrowthCone {
 private:
-	int somaDistance;
-	void increaseSomaDistance(int delta);
+	double somaDistance;
+	void increaseSomaDistance(double delta);
 	bool growthEnabled;
 	Coordinates coordinates;
 public:
 	GrowthCone& operator=( GrowthCone &growthCone );
 	GrowthCone();
 	bool isGrowthEnabled();
-	void move(Coordinates coord, int delta);
+	void move(Coordinates coord, double delta);
 	int getSomaDistance();
 	void setCoordinates(Coordinates coord); // use it only to set coordinates after creation
 	Coordinates getCoordinates();

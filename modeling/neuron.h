@@ -11,6 +11,13 @@ private:
 
 	int numberOfAxons;
 	Axon *axons;
+
+	int numberOfConnections;
+	struct Connection {
+		Neuron *neuron;
+		int delay;
+		//double probability;
+	}*connections;
 public:
 	static int NeuronCounter;
 	void resetIdCounter();
@@ -21,6 +28,9 @@ public:
 	void setCoordinates(Coordinates tmpCoord);
 
 	int addAxon(Coordinates coordinates);
+	int addConnection(int growthConeId, Neuron* neuron);
+
+	int getNeuronId();
 
 	void tick();
 };

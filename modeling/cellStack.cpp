@@ -7,9 +7,11 @@
 CellStack* CellStack::p_CellStack = 0;
 
 CellStack::CellStack() {
-	TRACE("CellStack", "Cell stack created\n"); 
+#ifdef CELLSTACKTRACES
+	TRACE("cellStack", "Cell stack created\n"); 
+#endif
 	numberOfCells = 0;
-	cells = new struct Cell[numberOfCells];
+	cells = new Cell[numberOfCells];
 };
 
 CellStack::~CellStack() {
@@ -22,73 +24,67 @@ CellStack* CellStack::getStack() {
 	return p_CellStack;
 };
 
-int CellStack::stackPush(struct Cell cell) {
+int CellStack::stackPush(Cell cell) {
 	if (numberOfCells < CELLSTACKMAXNUMBEROFCELLS) {
-		struct Cell *tmpCells;
+		Cell *tmpCells;
 
-		tmpCells = new struct Cell[numberOfCells];
+		tmpCells = new Cell[numberOfCells];
 
 		for(int i = 0; i < numberOfCells; i++) {
-			tmpCells[i].coordinates = cells[i].coordinates;
-			tmpCells[i].cellType    = cells[i].cellType;
-			tmpCells[i].NeuronId    = cells[i].NeuronId;
+			tmpCells[i] = cells[i];
 		}
 
 		delete [] cells;
 
-		cells = new struct Cell[++numberOfCells];
+		cells = new Cell[++numberOfCells];
 
 		for(int i = 0; i < numberOfCells - 1; i++) {
-			cells[i].coordinates = tmpCells[i].coordinates;
-			cells[i].cellType    = tmpCells[i].cellType;
-			cells[i].NeuronId    = tmpCells[i].NeuronId;
+			cells[i] = tmpCells[i];
 		}
 
 		delete [] tmpCells;
 
-		cells[numberOfCells - 1].coordinates = cell.coordinates;
-		cells[numberOfCells - 1].cellType    = cell.cellType;
-		cells[numberOfCells - 1].NeuronId    = cell.NeuronId;
-		TRACE("CellStack", "New element successfully pushed. Stack now has %d elements\n", numberOfCells);
+		cells[numberOfCells - 1] = cell;
+#ifdef CELLSTACKTRACES
+		TRACE("cellStack", "New element successfully pushed. Stack now has %d elements\n", numberOfCells);
+#endif
 		PrintStack();
 		return 0;
 	}
-	TRACE("CellStack", "ERROR:Can`t push to stack max number of elements exceeded\n");
+#ifdef CELLSTACKTRACES
+	TRACE("cellStack", "ERROR:Can`t push to stack max number of elements exceeded\n");
+#endif
 	return 1;
 };
 
-struct Cell CellStack::stackPull() {
-	struct Cell cell;
+Cell CellStack::stackPull() {
+	Cell cell;
+	cell.makeEmpty();
 
 	if (!isEmpty()) {
-		cell.coordinates = cells[numberOfCells - 1].coordinates;
-		cell.cellType    = cells[numberOfCells - 1].cellType;
-		cell.NeuronId    = cells[numberOfCells - 1].NeuronId;
+		cell = cells[numberOfCells - 1];
 
-		struct Cell *tmpCells;
+		Cell *tmpCells;
 
-		tmpCells = new struct Cell[--numberOfCells];
+		tmpCells = new Cell[--numberOfCells];
 
 		for(int i = 0; i < numberOfCells; i++) {
-			tmpCells[i].coordinates = cells[i].coordinates;
-			tmpCells[i].cellType    = cells[i].cellType;
-			tmpCells[i].NeuronId    = cells[i].NeuronId;
+			tmpCells[i] = cells[i];
 		}
 
 		delete [] cells;
 
-		cells = new struct Cell[numberOfCells];
+		cells = new Cell[numberOfCells];
 
 		for(int i = 0; i < numberOfCells; i++) {
-			cells[i].coordinates = tmpCells[i].coordinates;
-			cells[i].cellType    = tmpCells[i].cellType;
-			cells[i].NeuronId    = tmpCells[i].NeuronId;
+			cells[i] = tmpCells[i];
 		}
 
 
-		TRACE("CellStack", "Element successfully pulled from stack. Stack now has %d elements\n", numberOfCells);
+#ifdef CELLSTACKTRACES
+		TRACE("cellStack", "element successfully pulled from stack. Stack now has %d elements\n", numberOfCells);
+#endif
 		PrintStack();
-		return cell;
 	}
 	return cell;
 };
@@ -102,7 +98,9 @@ bool CellStack::isFull() {
 
 void CellStack::PrintStack() {
 	for(int i = 0; i < numberOfCells; i++) {
-		TRACE("CellStack", "Type of new element %d is %d, neuronId is %d and coordinates are:\n", i, cells[i].cellType, cells[i].NeuronId);
+#ifdef CELLSTACKTRACES
+		TRACE("cellStack", "Type of element %d is %d, neuronId is %d, growthConeId is %d and coordinates are:\n", i, cells[i].cellType, cells[i].NeuronId, cells[i].growthConeId);
 		cells[i].coordinates.PrintCoordinates();
+#endif
 	}
 };

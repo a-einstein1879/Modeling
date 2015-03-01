@@ -73,3 +73,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+Debug/modeling.pdb
+Debug/modeling.pdb
+modeling.ncb
+modeling.suo
+modeling/Debug/BuildLog.htm
+modeling/Debug/mt.dep
+modeling/Debug/vc90.idb
+modeling/Debug/vc90.pdb

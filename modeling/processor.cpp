@@ -1,4 +1,5 @@
 #include "processor.h"
+#include "cmn_defines.h"
 
 //For pause
 #include <cstdlib>
@@ -17,7 +18,7 @@ void Processor::Tick() {
 
 void Processor::Run() {
 	int i = 0;
-	while(i < 5) {
+	while(i < WORKTIME) {
 		i++;
 		Tick();
 	}

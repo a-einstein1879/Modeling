@@ -16,10 +16,11 @@ private:
 	int  addNeuron(int x = -1, int y = -1);
 	void fillField(int x, int y, char type, int neuronId);
 	void createNeuron();
+	Neuron* getNeuronById(int neuronId);
 public:
 	Hippocampus();
-	void tick();
 	int getFieldType(int x, int y);
+	void tick();
 };
 
 #endif

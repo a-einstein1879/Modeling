@@ -5,6 +5,9 @@ struct Direction {
 	double fi;
 };
 
+//TODO:Better remove extern function as soon as it`s possible
+extern void getTwoDirections(struct Direction direction, struct Direction *twoDirections);
+
 class Coordinates {
 private:
    int CoordX;
@@ -16,7 +19,7 @@ public:
 	void SetY(int y);
 	int GetX();
 	int GetY();
-	void findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId); // Helps neurite to find new coordinates
+	double findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId); // Helps neurite to find new coordinates
 };
 
 #endif

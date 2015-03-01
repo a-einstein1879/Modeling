@@ -7,14 +7,13 @@ class CellStack {
 private:
 	static CellStack *p_CellStack;
 	int numberOfCells;
-	//TODO: Use cells struct instead of this
-	struct Cell *cells;
+	Cell *cells;
 public:
 	CellStack();
 	~CellStack();
 	static CellStack* getStack();
-	int stackPush(struct Cell cell);
-	struct Cell stackPull();
+	int stackPush(Cell cell);
+	Cell stackPull();
 	bool isEmpty();
 	bool isFull();
 	void PrintStack();

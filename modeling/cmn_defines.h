@@ -6,6 +6,8 @@
 #define NUMBEROFCELLSX 20
 #define NUMBEROFCELLSY 20
 
+#define WORKTIME 2
+
 #define MAXNUMBEROFNEURONS 5
 
 //(nothing / neuron / axon / dendrite) (0/1/2/3)
@@ -17,9 +19,13 @@
 
 #include <stdio.h>
 
-#define TRACE(file, format, ...) \
-   printf(file);                 \
-   printf(".cpp: ");             \
-   printf(format, __VA_ARGS__);
+//TODO:create macros to add and remove elements from dynamic array
+
+//TODO:create trace groups
+//#define CELLSTACKTRACES
+#define TRACE(file, format, ...)      \
+		printf(file);                 \
+		printf(".cpp: ");             \
+		printf(format, __VA_ARGS__);
 
 #endif

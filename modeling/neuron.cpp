@@ -5,15 +5,20 @@ int Neuron::NeuronCounter = 0;
 
 void Neuron::resetIdCounter() {
    NeuronCounter = 0;
-}
+};
 
 Neuron::Neuron() {
 	if (NeuronCounter < MAXNUMBEROFNEURONS) {
 		NeuronId = NeuronCounter++;
 	};
+
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
-	TRACE("Neuron", "Neuron with id %d was created\n", NeuronId);
+
+	numberOfConnections = 0;
+	connections = new Connection[numberOfConnections];
+
+	TRACE("neuron", "Neuron with id %d was created\n", NeuronId);
 };
 
 Neuron::~Neuron() {
@@ -25,14 +30,14 @@ void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinate
 	coord.SetX(x);
 	coord.SetY(y);
 
-	TRACE("Neuron", "Coordinates of neuron number %d were changed. New coordinates are:\n", NeuronId);
+	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:\n", NeuronId);
 	coord.PrintCoordinates();
 }
 
 void Neuron::setCoordinates(Coordinates tmpCoord) {//TODO: proper checking of coordinates availability
     coord = tmpCoord;
 
-	TRACE("Neuron", "Coordinates of neuron number %d were changed. New coordinates are:\n", NeuronId);
+	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:\n", NeuronId);
 	coord.PrintCoordinates();
 }
 
@@ -50,13 +55,42 @@ int Neuron::addAxon(Coordinates coordinates) {
 	delete [] tmpAxons;
 	axons[numberOfAxons - 1].setCoordinates(coordinates);
 	axons[numberOfAxons - 1].setNeuronId(NeuronId);
+	axons[numberOfAxons - 1].setType(AXON);
 	
-	TRACE("Neuron", "Neuron id %d now has new axon. The number of axons: \n", NeuronId, numberOfAxons);
+	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d\n", NeuronId, numberOfAxons);
 	return 0;
 };
 
+int Neuron::addConnection(int growthConeId, Neuron* neuron) {
+	Connection *tmpConnections;
+	tmpConnections = new Connection[numberOfConnections];
+	for(int i = 0; i < numberOfConnections; i++) {
+		tmpConnections[i].neuron = connections[i].neuron;
+		tmpConnections[i].delay  = connections[i].delay;
+	}
+
+	connections = new Connection[++numberOfConnections];
+
+	for(int i = 0; i < numberOfConnections - 1; i++) {
+		connections[i].neuron = tmpConnections[i].neuron;
+		connections[i].delay  = tmpConnections[i].delay;
+	}
+
+	delete [] tmpConnections;
+
+	connections[numberOfConnections - 1].neuron = neuron;
+	connections[numberOfConnections - 1].delay  = axons->getGrowthConeDistance(growthConeId);
+	
+	TRACE("neuron", "Neuron id %d now has new connection with delay %d. The number of connections: %d\n", NeuronId, connections[numberOfConnections - 1].delay,numberOfConnections);
+	return 0;
+};
+
+int Neuron::getNeuronId() {
+	return NeuronId;
+};
+
 void Neuron::tick() {
-	TRACE("Neuron", "Neuron with id %d tick\n", NeuronId);
+	TRACE("neuron", "Neuron with id %d tick\n", NeuronId);
 	if(numberOfAxons == 0) {addAxon(coord);}
 	for(int i = 0; i <numberOfAxons; i++)
 		axons[i].tick();

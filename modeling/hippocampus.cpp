@@ -24,10 +24,13 @@ void Hippocampus::checkStack() {
 		Cell cell = cellStack->stackPull();
 		if(neuronType[cell.coordinates.GetX()][cell.coordinates.GetY()] == NOTHING) {
 			// Case field is clear
-            TRACE("Hippocampus", "cell.cellType = %d, cell.NeuronId = %d)\n", cell.cellType, cell.NeuronId);
-			fillField(cell.coordinates.GetX(), cell.coordinates.GetY(), cell.cellType, cell.NeuronId);
+            fillField(cell.coordinates.GetX(), cell.coordinates.GetY(), cell.cellType, cell.NeuronId);
 		} else {
 			// Case we need to create a new connection
+			Neuron* source      = getNeuronById(cell.NeuronId);
+			Neuron* destination = getNeuronById(neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]);
+			source->addConnection(cell.growthConeId, destination);
+			TRACE("hippocampus", "Added new connection between neuron %d and neuron %d\n", source->getNeuronId(), destination->getNeuronId());
 		}
 	}
 };
@@ -47,7 +50,7 @@ int Hippocampus::addNeuron(int x, int y) { //TODO: fix recursive bug. Add counte
          if (randomity == true)
             addNeuron();
          else {
-            TRACE("Hippocampus", "Can`t create neuron here (%d, %d)\n", x, y);
+            TRACE("hippocampus", "Can`t create neuron here (%d, %d)\n", x, y);
          }
       }
    }
@@ -58,7 +61,7 @@ void Hippocampus::fillField(int x, int y, char type, int neuronId) {
    neuronType[x][y] = type;
    neuronIds[x][y]  = neuronId;
 
-   TRACE("Hippocampus", "Space (%d, %d) is now `%d` type with id %d\n", x, y, getFieldType(x, y), neuronIds[x][y]);
+   TRACE("hippocampus", "Space (%d, %d) is now `%d` type with id %d\n", x, y, getFieldType(x, y), neuronIds[x][y]);
 }
 
 void Hippocampus::createNeuron() {
@@ -77,7 +80,18 @@ void Hippocampus::createNeuron() {
 
 		delete [] tmpNeurons;
 	}
-	TRACE("Hippocampus", "Hippocampus now has %d neurons\n", numberOfNeurons);
+	TRACE("hippocampus", "Hippocampus now has %d neurons\n", numberOfNeurons);
+};
+
+Neuron* Hippocampus::getNeuronById(int neuronId) {
+	Neuron* neuron = NULL;
+	for(int i = 0; i < numberOfNeurons; i++) {
+		if (neurons[i].getNeuronId() == neuronId) {
+			neuron = neurons + i;
+			break;
+		}
+	};
+	return neuron;
 };
 
 /************************/
@@ -85,11 +99,11 @@ void Hippocampus::createNeuron() {
 /************************/
 
 void Hippocampus::tick() {
-	TRACE("Hippocampus", "Hippocampus tick\n");
+	TRACE("hippocampus", "Hippocampus tick\n");
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
 	checkStack();
-	if(numberOfNeurons == 0) {addNeuron(10, 5); addNeuron(10, 10);}
+	if(numberOfNeurons == 0) {addNeuron(5, 10); /*addNeuron(10, 5);*/}
 };
 
 int Hippocampus::getFieldType(int x, int y) {
