@@ -13,11 +13,13 @@ private:
 public:
 	GrowthCone& operator=( GrowthCone &growthCone );
 	GrowthCone();
+	void disableGrowth();
 	bool isGrowthEnabled();
 	void move(Coordinates coord, double delta);
-	int getSomaDistance();
+	double getSomaDistance();
 	void setCoordinates(Coordinates coord); // use it only to set coordinates after creation
 	Coordinates getCoordinates();
+	void printStats();
 };
 
 #endif

@@ -5,7 +5,7 @@ struct Direction {
 	double fi;
 };
 
-//TODO:Better remove extern function as soon as it`s possible
+//TODO:Better remove extern function as soon as it`s possible. just move it to environment class
 extern void getTwoDirections(struct Direction direction, struct Direction *twoDirections);
 
 class Coordinates {

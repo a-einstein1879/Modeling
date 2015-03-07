@@ -15,6 +15,10 @@ GrowthCone::GrowthCone() {
 	somaDistance  = 0;
 };
 
+void GrowthCone::disableGrowth() {
+	growthEnabled = false;
+};
+
 bool GrowthCone::isGrowthEnabled() {
 	return growthEnabled;
 };
@@ -28,8 +32,8 @@ void GrowthCone::increaseSomaDistance(double delta) {
 	somaDistance += delta;
 };
 
-int GrowthCone::getSomaDistance() {
-	return (int)somaDistance;
+double GrowthCone::getSomaDistance() {
+	return somaDistance;
 };
 
 void GrowthCone::setCoordinates(Coordinates coord) {
@@ -38,4 +42,9 @@ void GrowthCone::setCoordinates(Coordinates coord) {
 
 Coordinates GrowthCone::getCoordinates() {
 	return coordinates;
+};
+
+void GrowthCone::printStats() {
+	TRACE("growthCone", "Growth cone stats. Soma distance = %d and coordinates are\n", somaDistance);
+	coordinates.PrintCoordinates();
 };

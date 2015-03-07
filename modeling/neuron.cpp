@@ -81,7 +81,9 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 	connections[numberOfConnections - 1].neuron = neuron;
 	connections[numberOfConnections - 1].delay  = axons->getGrowthConeDistance(growthConeId);
 	
+#ifdef CONNECTIONTRACES
 	TRACE("neuron", "Neuron id %d now has new connection with delay %d. The number of connections: %d\n", NeuronId, connections[numberOfConnections - 1].delay,numberOfConnections);
+#endif
 	return 0;
 };
 

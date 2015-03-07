@@ -30,7 +30,9 @@ void Hippocampus::checkStack() {
 			Neuron* source      = getNeuronById(cell.NeuronId);
 			Neuron* destination = getNeuronById(neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]);
 			source->addConnection(cell.growthConeId, destination);
+#ifdef CONNECTIONTRACES
 			TRACE("hippocampus", "Added new connection between neuron %d and neuron %d\n", source->getNeuronId(), destination->getNeuronId());
+#endif
 		}
 	}
 };
@@ -103,7 +105,7 @@ void Hippocampus::tick() {
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
 	checkStack();
-	if(numberOfNeurons == 0) {addNeuron(5, 10); /*addNeuron(10, 5);*/}
+	if(numberOfNeurons == 0) {addNeuron(5, 5);/* addNeuron(5, 15); addNeuron(5, 10);*/}
 };
 
 int Hippocampus::getFieldType(int x, int y) {

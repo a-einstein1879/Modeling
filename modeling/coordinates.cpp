@@ -32,14 +32,15 @@ int Coordinates::GetY() {
 #include "cellStack.h"
 
 double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId) {
+	TRACE("coordinates", "Finding new coordinates for neuron %d growth cone id %d\n", NeuronId, growthConeId);
 	double realDelta;
 	for(int i = 1; i < delta; i++) {
 		int tmpCoordX = oldCoordinates.GetX() + i * cos(direction.fi);
 		int tmpCoordY = oldCoordinates.GetY() + i * sin(direction.fi);
 
 		if ( (tmpCoordX == CoordX) && (tmpCoordY == CoordY) ) {continue;}
-		if((tmpCoordX > NUMBEROFCELLSX - 1) || (CoordX < 1) ) {break;}
-		if((tmpCoordY > NUMBEROFCELLSY - 1) || (CoordY < 1) ) {break;}
+		if((tmpCoordX > NUMBEROFCELLSX - 1) || (tmpCoordX < 1) ||
+		   (tmpCoordY > NUMBEROFCELLSY - 1) || (tmpCoordX < 1) ) {break; realDelta = -1;}
 
 		CoordX = tmpCoordX;
 		CoordY = tmpCoordY;
