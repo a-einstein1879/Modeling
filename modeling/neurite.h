@@ -21,7 +21,7 @@ protected:
 	void growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId);
 
 	virtual double solveEquation(int growthConeId) = 0;
-	virtual bool solveEmbranchmentEquation() = 0;
+	virtual bool solveEmbranchmentEquation(int growthConeId) = 0;
 public:
 	Neurite();
 
@@ -36,14 +36,17 @@ public:
 
 class Axon : public Neurite {
 private:
+	int branch;
 	double solveEquation(int growthConeId);
-	bool solveEmbranchmentEquation();
+	bool solveEmbranchmentEquation(int growthConeId);
+public:
+	Axon();
 };
 
 class Dendrite : public Neurite {
 private:
 	double solveEquation(int growthConeId);
-	bool solveEmbranchmentEquation();
+	bool solveEmbranchmentEquation(int growthConeId);
 };
 
 #endif

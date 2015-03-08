@@ -3,10 +3,8 @@
 
 GrowthCone& GrowthCone::operator=( GrowthCone &growthCone ) {
 	growthEnabled = growthCone.isGrowthEnabled();
-	somaDistance = growthCone.getSomaDistance();
-	coordinates = growthCone.getCoordinates();
-	TRACE("growthCone", "Growth cone copied. Soma distance = %d and coordinates are\n", somaDistance);
-	coordinates.PrintCoordinates();
+	somaDistance  = growthCone.getSomaDistance();
+	coordinates   = growthCone.getCoordinates();
 	return *this;
 };
 
@@ -26,6 +24,7 @@ bool GrowthCone::isGrowthEnabled() {
 void GrowthCone::move(Coordinates coord, double delta) {
 	coordinates = coord;
 	increaseSomaDistance(delta);
+	printStats();
 };
 
 void GrowthCone::increaseSomaDistance(double delta) {
@@ -45,6 +44,8 @@ Coordinates GrowthCone::getCoordinates() {
 };
 
 void GrowthCone::printStats() {
-	TRACE("growthCone", "Growth cone stats. Soma distance = %d and coordinates are\n", somaDistance);
+#ifdef GROWTHCONETRACES
+	TRACE("growthCone", "Growth cone stats. Soma distance = %.1e and coordinates are\n", getSomaDistance());
 	coordinates.PrintCoordinates();
+#endif
 };

@@ -6,7 +6,7 @@
 #define NUMBEROFCELLSX 20
 #define NUMBEROFCELLSY 20
 
-#define WORKTIME 5
+#define WORKTIME 12
 
 #define MAXNUMBEROFNEURONS 5
 
@@ -43,7 +43,8 @@
 
 //TODO:create trace groups
 //#define CELLSTACKTRACES
-#define CONNECTIONTRACES
+#define GROWTHCONETRACES
+//#define CONNECTIONTRACES
 #define TRACE(file, format, ...)      \
 		printf(file);                 \
 		printf(".cpp: ");             \

@@ -35,9 +35,9 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 	TRACE("coordinates", "Finding new coordinates for neuron %d growth cone id %d\n", NeuronId, growthConeId);
 	double realDelta;
 	for(int i = 1; i < delta; i++) {
-		int tmpCoordX = oldCoordinates.GetX() + i * cos(direction.fi);
-		int tmpCoordY = oldCoordinates.GetY() + i * sin(direction.fi);
-
+		int tmpCoordX = (int) ( (double)oldCoordinates.GetX() + (double)i * cos(direction.fi) );
+		int tmpCoordY = (int) ( (double)oldCoordinates.GetY() + (double)i * sin(direction.fi) );
+	
 		if ( (tmpCoordX == CoordX) && (tmpCoordY == CoordY) ) {continue;}
 		if((tmpCoordX > NUMBEROFCELLSX - 1) || (tmpCoordX < 1) ||
 		   (tmpCoordY > NUMBEROFCELLSY - 1) || (tmpCoordX < 1) ) {break; realDelta = -1;}

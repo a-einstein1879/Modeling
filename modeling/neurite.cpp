@@ -12,6 +12,8 @@ void Neurite::addGrowthCone(int growthConeId) {
 	
 	if (growthConeId != -1) {
 		growthCones[numberOfGrowthCones - 1] = growthCones[growthConeId];
+		growthCones[growthConeId].printStats();
+		growthCones[numberOfGrowthCones - 1].printStats();
 	}
 	else {
 		growthCones[numberOfGrowthCones - 1].setCoordinates(coordinates);
@@ -33,7 +35,7 @@ void Neurite::setType(int Type) {
 };
 
 int Neurite::getGrowthConeDistance(int growthConeId) {
-	return growthCones[growthConeId].getSomaDistance();
+	return (int)growthCones[growthConeId].getSomaDistance();
 };
 
 void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
@@ -56,14 +58,13 @@ void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
 			growGrowthCone(oldCoordinates, delta, twoDirections[1], type, NeuronId, growthConeId);
 		}
 		else {
-			TRACE("neurite", "Growth cone %d with neuron id %d grows\n", growthConeId, NeuronId);
-			//TRACE("neurite", "Growth cone %d with neuron id %d grows\nfi = %e; delta = %e\n", growthConeId, NeuronId, direction.fi, delta);
 			growGrowthCone(oldCoordinates, delta, direction, type, NeuronId, growthConeId);
 		}
 	}
 };
 
 void Neurite::growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId) {
+		TRACE("neurite", "Growth cone %d with neuron id %d grows by %d\n", growthConeId, NeuronId, delta);
 		Coordinates newCoordinates;
 		double realDelta = newCoordinates.findNewCoordinates(coord, delta, direction, type, NeuronId, growthConeId);
 		growthCones[growthConeId].move(newCoordinates, realDelta);
@@ -80,19 +81,28 @@ void Neurite::tick() {
 	TRACE("neurite", "Neurite of neuron with id %d tick\n", NeuronId);
 	for(int i = 0; i < numberOfGrowthConesBeforeTick; i++)
 		if ( ( delta = solveEquation(i) ) > 0) {
-			growNeurite(i, delta, solveEmbranchmentEquation());
+			growNeurite(i, delta, solveEmbranchmentEquation(i));
 		}
 };
 
-double Axon::solveEquation(int growthConeId) {
-	TRACE("neurite", "Solving equation of neuron with id %d and growth cone id %d\n", NeuronId, growthConeId);
-	return 5;
+
+Axon::Axon() {
+	branch = 0;
 };
 
-bool Axon::solveEmbranchmentEquation() {
-	TRACE("neurite", "Soma distance is %d\n", getGrowthConeDistance(0));
-	if ( (getGrowthConeDistance(0) >= 3) && (getGrowthConeDistance(0) <= 4) ||
-		 (getGrowthConeDistance(0) >= 6) && (getGrowthConeDistance(0) <= 7)) {
+/* For rand() */
+#include <stdlib.h>
+double Axon::solveEquation(int growthConeId) {
+	branch += rand()%4;
+	TRACE("neurite", "Solving equation of neuron with id %d and growth cone id %d\n", NeuronId, growthConeId);
+	return 3;
+};
+
+bool Axon::solveEmbranchmentEquation(int growthConeId) {
+	if ( (branch % 3) == 0 ) {
+	/*TRACE("neurite", "Soma distance is %d\n", getGrowthConeDistance(growthConeId));
+	if ( (getGrowthConeDistance(growthConeId) >= 3) && (getGrowthConeDistance(growthConeId) <= 4) ||
+		 (getGrowthConeDistance(growthConeId) >= 9) && (getGrowthConeDistance(growthConeId) <= 10)) {*/
 		return true;
 	} else {
 		return false;
@@ -103,6 +113,6 @@ double Dendrite::solveEquation(int growthConeId) {
 	return 1;
 };
 
-bool Dendrite::solveEmbranchmentEquation() {
+bool Dendrite::solveEmbranchmentEquation(int growthConeId) {
 	return true;
 };
