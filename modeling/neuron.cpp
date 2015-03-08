@@ -42,17 +42,8 @@ void Neuron::setCoordinates(Coordinates tmpCoord) {//TODO: proper checking of co
 }
 
 int Neuron::addAxon(Coordinates coordinates) {
-	Axon *tmpAxons;
-	tmpAxons = new Axon[numberOfAxons];
-	for(int i = 0; i < numberOfAxons; i++)
-		*(tmpAxons+i) = axons[i];
+	dynamicArrayRealloc(Axon, axons, numberOfAxons);
 
-	axons = new Axon[++numberOfAxons];
-
-	for(int i = 0; i < numberOfAxons - 1; i++)
-		axons[i] = *(tmpAxons+i);
-
-	delete [] tmpAxons;
 	axons[numberOfAxons - 1].setCoordinates(coordinates);
 	axons[numberOfAxons - 1].setNeuronId(NeuronId);
 	axons[numberOfAxons - 1].setType(AXON);

@@ -105,7 +105,7 @@ void Hippocampus::tick() {
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
 	checkStack();
-	if(numberOfNeurons == 0) {addNeuron(5, 5);/* addNeuron(5, 15); addNeuron(5, 10);*/}
+	if(numberOfNeurons == 0) {/*addNeuron(5, 5); addNeuron(5, 15);*/ addNeuron(5, 10);}
 };
 
 int Hippocampus::getFieldType(int x, int y) {

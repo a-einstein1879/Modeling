@@ -3,6 +3,7 @@
 
 #include "cmn_struct.h"
 #include "coordinates.h"
+#include "environment.h"
 
 class GrowthCone {
 private:

@@ -8,20 +8,8 @@ Neurite::Neurite() {
 };
 
 void Neurite::addGrowthCone(int growthConeId) {
-	GrowthCone *tmpGrowthCones;
-	tmpGrowthCones = new GrowthCone[numberOfGrowthCones];
-	for(int i = 0; i < numberOfGrowthCones; i++) {
-		tmpGrowthCones[i] = growthCones[i];
-	}
-
-	growthCones = new GrowthCone[++numberOfGrowthCones];
-
-	for(int i = 0; i < numberOfGrowthCones - 1; i++) {
-		growthCones[i] = tmpGrowthCones[i];
-	}
-
-	delete [] tmpGrowthCones;
-
+	dynamicArrayRealloc(GrowthCone, growthCones, numberOfGrowthCones);
+	
 	if (growthConeId != -1) {
 		growthCones[numberOfGrowthCones - 1] = growthCones[growthConeId];
 	}

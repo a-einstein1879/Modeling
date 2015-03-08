@@ -6,7 +6,7 @@
 #define NUMBEROFCELLSX 20
 #define NUMBEROFCELLSY 20
 
-#define WORKTIME 3
+#define WORKTIME 5
 
 #define MAXNUMBEROFNEURONS 5
 
@@ -19,26 +19,26 @@
 
 #include <stdio.h>
 
-//TODO:create macros to add and remove elements from dynamic array
 #define dynamicArrayRealloc(type, arrayName, numberOfElements)      \
 	type *tmpArrayName;                                             \
 	tmpArrayName = new type[numberOfElements];                      \
                                                                     \
-	if (numberOfElements != 0)                                      \
+	if (numberOfElements != 0) {                                    \
 		for(int i = 0; i < numberOfElements; i++) {                 \
 			tmpArrayName[i] = arrayName[i];                         \
 		}                                                           \
-                                                                    \
-	delete {} arrayName;                                            \
+        delete [] arrayName;                                        \
+	}                                                               \
                                                                     \
 	arrayName = new type[++numberOfElements];                       \
                                                                     \
-	if (numberOfElements != 0)                                      \
+	if (numberOfElements != 0) {                                    \
 		for(int i = 0; i < numberOfElements - 1; i++) {             \
 			arrayName[i] = tmpArrayName[i];                         \
 		}                                                           \
+	}                                                               \
                                                                     \
-	delete [] tmpArrayName;
+	delete [] tmpArrayName
 
 
 //TODO:create trace groups

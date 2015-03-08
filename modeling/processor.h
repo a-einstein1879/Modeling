@@ -9,7 +9,7 @@ class Processor {
 private:
 	GUI *gui;
 	Hippocampus *hippocampus;
-	//Environment *environment;
+	Environment *environment;
 	void Tick();
 public:
 	Processor();

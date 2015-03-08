@@ -25,6 +25,7 @@ protected:
 public:
 	Neurite();
 
+	//Should only be used right after creation
 	void setCoordinates(Coordinates coord);
 	void setNeuronId(int newId);
 	void setType(int Type);
