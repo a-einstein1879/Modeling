@@ -9,9 +9,15 @@ Environment* Environment::getEnvironment() {
 	return p_environment;
 };
 
+#define _USE_MATH_DEFINES //for Pi in visual studio 2009 and earlier
+#include <math.h> //For pi
 struct Direction Environment::getDirection(Coordinates coord) {
 	struct Direction direction;
-	direction.fi = 0;
+	if (coord.GetY() > 10) {
+		direction.fi = 0;
+	} else {
+		direction.fi = M_PI;
+	}
 	return direction;
 };
 

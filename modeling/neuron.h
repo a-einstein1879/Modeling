@@ -9,8 +9,13 @@ private:
 	int NeuronId;
 	Coordinates coord;
 
+	int addAxon(Coordinates coordinates);
 	int numberOfAxons;
 	Axon *axons;
+
+	int addDendrite(Coordinates coordinates);
+	int numberOfDendrites;
+	Dendrite *dendrites;
 
 	int numberOfConnections;
 	struct Connection {
@@ -27,7 +32,6 @@ public:
 	void setCoordinates(int x, int y);
 	void setCoordinates(Coordinates tmpCoord);
 
-	int addAxon(Coordinates coordinates);
 	int addConnection(int growthConeId, Neuron* neuron);
 
 	int getNeuronId();

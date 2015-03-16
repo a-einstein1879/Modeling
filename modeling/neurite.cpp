@@ -5,6 +5,13 @@
 Neurite::Neurite() {
 	numberOfGrowthCones = 0;
 	addGrowthCone();
+	
+	alpha = 1.1;
+	betta = 1.18;
+	c0    = 14;
+	T     = 0.005;
+	Vat   = 40;
+	k     = 0.00005;
 };
 
 void Neurite::addGrowthCone(int growthConeId) {
@@ -89,15 +96,8 @@ void Neurite::tick() {
 double Axon::solveEquation(int growthConeId) {
 	double delta;
 	double length = getGrowthConeDistance(growthConeId);
-	/* Formula below and coefficients are taken from Mironov, Semyanov, Kazantsev "Dendrite and axon specific geometrical adaptation in neurite development" */
-	double alpha = 1.1;
-	double betta = 1.18;
-	double c0    = 14;
-	double T     = 0.005;
-	double Vat   = 40;
-	double k     = 0.00005;
 	delta = alpha * c0 * exp ( ( k - T / Vat ) * length ) - betta;
-	TRACE("neurite", "Solving equation of neuron with id %d and growth cone id %d\n", NeuronId, growthConeId);
+	TRACE("neurite", "Solving axon equation of neuron with id %d and growth cone id %d\n", NeuronId, growthConeId);
 	return 3;
 };
 
@@ -108,10 +108,19 @@ bool Axon::solveEmbranchmentEquation(int growthConeId) {
 	return false;
 };
 
+#include <math.h>
 double Dendrite::solveEquation(int growthConeId) {
-	return 1;
+	double delta;
+	double length = getGrowthConeDistance(growthConeId);
+	delta = alpha * c0 * pow ( 1 + k * length, 2 ) * exp ( - ( T * length / Vat ) ) - betta;
+	delta = delta / numberOfGrowthCones;
+	TRACE("neurite", "Solving dendrite equation of neuron with id %d and growth cone id %d\n", NeuronId, growthConeId);
+	return delta;
 };
 
 bool Dendrite::solveEmbranchmentEquation(int growthConeId) {
+	if(getGrowthConeDistance(growthConeId) == 0) {
+		return false;
+	}
 	return true;
 };

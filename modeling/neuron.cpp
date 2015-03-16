@@ -15,6 +15,9 @@ Neuron::Neuron() {
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
 
+	numberOfDendrites = 0;
+	dendrites = new Dendrite[numberOfDendrites];
+
 	numberOfConnections = 0;
 	connections = new Connection[numberOfConnections];
 
@@ -24,6 +27,7 @@ Neuron::Neuron() {
 Neuron::~Neuron() {
 	NeuronCounter--;
 	delete [] axons;
+	delete [] dendrites;
 }
 
 void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinates availability
@@ -49,6 +53,17 @@ int Neuron::addAxon(Coordinates coordinates) {
 	axons[numberOfAxons - 1].setType(AXON);
 	
 	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d\n", NeuronId, numberOfAxons);
+	return 0;
+};
+
+int Neuron::addDendrite(Coordinates coordinates) {
+	dynamicArrayRealloc(Dendrite, dendrites, numberOfDendrites);
+
+	dendrites[numberOfDendrites - 1].setCoordinates(coordinates);
+	dendrites[numberOfDendrites - 1].setNeuronId(NeuronId);
+	dendrites[numberOfDendrites - 1].setType(DENDRITE);
+	
+	TRACE("neuron", "Neuron id %d now has new dendrite. The number of dendrites: %d\n", NeuronId, numberOfDendrites);
 	return 0;
 };
 
@@ -84,7 +99,12 @@ int Neuron::getNeuronId() {
 
 void Neuron::tick() {
 	TRACE("neuron", "Neuron with id %d tick\n", NeuronId);
-	if(numberOfAxons == 0) {addAxon(coord);}
+	if(numberOfAxons     == 0 && NeuronId == 0) {addAxon(coord);}
+	if(numberOfDendrites == 0 && NeuronId == 1) {addDendrite(coord);}
+
 	for(int i = 0; i <numberOfAxons; i++)
 		axons[i].tick();
+
+	for(int i = 0; i <numberOfDendrites; i++)
+		dendrites[i].tick();
 };
