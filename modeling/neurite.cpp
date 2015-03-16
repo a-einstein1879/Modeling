@@ -34,8 +34,8 @@ void Neurite::setType(int Type) {
 	type = Type;
 };
 
-int Neurite::getGrowthConeDistance(int growthConeId) {
-	return (int)growthCones[growthConeId].getSomaDistance();
+double Neurite::getGrowthConeDistance(int growthConeId) {
+	return growthCones[growthConeId].getSomaDistance();
 };
 
 void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
@@ -64,7 +64,7 @@ void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
 };
 
 void Neurite::growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId) {
-		TRACE("neurite", "Growth cone %d with neuron id %d grows by %d\n", growthConeId, NeuronId, delta);
+		TRACE("neurite", "Growth cone %d with neuron id %d grows by %e\n", growthConeId, NeuronId, delta);
 		Coordinates newCoordinates;
 		double realDelta = newCoordinates.findNewCoordinates(coord, delta, direction, type, NeuronId, growthConeId);
 		growthCones[growthConeId].move(newCoordinates, realDelta);
@@ -85,28 +85,27 @@ void Neurite::tick() {
 		}
 };
 
-
-Axon::Axon() {
-	branch = 0;
-};
-
-/* For rand() */
-#include <stdlib.h>
+#include <math.h>
 double Axon::solveEquation(int growthConeId) {
-	branch += rand()%4;
+	double delta;
+	double length = getGrowthConeDistance(growthConeId);
+	/* Formula below and coefficients are taken from Mironov, Semyanov, Kazantsev "Dendrite and axon specific geometrical adaptation in neurite development" */
+	double alpha = 1.1;
+	double betta = 1.18;
+	double c0    = 14;
+	double T     = 0.005;
+	double Vat   = 40;
+	double k     = 0.00005;
+	delta = alpha * c0 * exp ( ( k - T / Vat ) * length ) - betta;
 	TRACE("neurite", "Solving equation of neuron with id %d and growth cone id %d\n", NeuronId, growthConeId);
 	return 3;
 };
 
+/* For rand() */
+#include <stdlib.h>
 bool Axon::solveEmbranchmentEquation(int growthConeId) {
-	if ( (branch % 3) == 0 ) {
-	/*TRACE("neurite", "Soma distance is %d\n", getGrowthConeDistance(growthConeId));
-	if ( (getGrowthConeDistance(growthConeId) >= 3) && (getGrowthConeDistance(growthConeId) <= 4) ||
-		 (getGrowthConeDistance(growthConeId) >= 9) && (getGrowthConeDistance(growthConeId) <= 10)) {*/
-		return true;
-	} else {
-		return false;
-	}
+	//return rand();
+	return false;
 };
 
 double Dendrite::solveEquation(int growthConeId) {

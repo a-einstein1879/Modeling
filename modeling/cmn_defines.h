@@ -6,7 +6,7 @@
 #define NUMBEROFCELLSX 20
 #define NUMBEROFCELLSY 20
 
-#define WORKTIME 12
+#define WORKTIME 7
 
 #define MAXNUMBEROFNEURONS 5
 
@@ -16,6 +16,9 @@
 #define AXON       2
 #define	DENDRITE   3
 #define GROWTHCONE 4
+
+#define NEURONCOLOR GREEN
+#define AXONCOLOR   WHITE
 
 #include <stdio.h>
 
@@ -43,7 +46,7 @@
 
 //TODO:create trace groups
 //#define CELLSTACKTRACES
-#define GROWTHCONETRACES
+//#define GROWTHCONETRACES
 //#define CONNECTIONTRACES
 #define TRACE(file, format, ...)      \
 		printf(file);                 \

@@ -30,17 +30,14 @@ public:
 	void setNeuronId(int newId);
 	void setType(int Type);
 
-	int getGrowthConeDistance(int growthConeId);
+	double getGrowthConeDistance(int growthConeId);
 	void tick();
 };
 
 class Axon : public Neurite {
 private:
-	int branch;
 	double solveEquation(int growthConeId);
 	bool solveEmbranchmentEquation(int growthConeId);
-public:
-	Axon();
 };
 
 class Dendrite : public Neurite {
