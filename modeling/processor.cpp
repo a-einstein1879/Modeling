@@ -19,7 +19,9 @@ void Processor::Tick() {
 	gui->tick();
 };
 
+#include <ctime>    /* For time(0) seed */
 void Processor::Run() {
+	srand(time(0));
 	int i = 0;
 	while(i < WORKTIME) {
 		i++;

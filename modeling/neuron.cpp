@@ -52,9 +52,9 @@ int Neuron::addAxon(Coordinates coordinates) {
 	ENTER_FUNCTION("neuron", "addAxon(Coordinates coordinates)", "");
 	dynamicArrayRealloc(Axon, axons, numberOfAxons);
 
-	axons[numberOfAxons - 1].setCoordinates(coordinates);
-	axons[numberOfAxons - 1].setNeuronId(NeuronId);
 	axons[numberOfAxons - 1].setType(AXON);
+	axons[numberOfAxons - 1].setNeuronId(NeuronId);
+	axons[numberOfAxons - 1].setCoordinates(coordinates);
 	
 	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d", NeuronId, numberOfAxons);
 	return 0;

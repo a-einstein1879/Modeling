@@ -10,6 +10,7 @@ Coordinates& Coordinates::operator=( Coordinates &coord ) {
 void Coordinates::PrintCoordinates() {
 	ENTER_FUNCTION("coordinates", "PrintCoordinates()", "");
 	TRACE("coordinates", "X = %d; Y = %d", CoordX, CoordY);
+	if(CoordX > NUMBEROFCELLSX || CoordY > NUMBEROFCELLSY || CoordX < 0 || CoordY < 0) {TRACE("coordinates", "ERROR!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n");}
 };
 
 void Coordinates::SetX(int x) {
@@ -34,31 +35,46 @@ int Coordinates::GetY() {
 
 double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId) {
 	ENTER_FUNCTION("coordinates", "findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId)",
-		"delta = %.2f, direction.fi = %.2f, cellType = %d, NeuronId = %d, growthConeId = %d", delta, direction.fi, cellType, NeuronId, growthConeId);
+		"delta = %.2f, direction.fi = %.2f, cellType = %d, NeuronId = %d, growthConeId = %d. Old coordinates:", delta, direction.fi, cellType, NeuronId, growthConeId);
+	oldCoordinates.PrintCoordinates();
 	double realDelta;
-	CellStack *cellStack = cellStack->getStack();
-	int tmpCoordX = (int) (double)oldCoordinates.GetX();
-	int tmpCoordY = (int) (double)oldCoordinates.GetY();
-	for(int i = 1; i <= delta; i++) {
-		tmpCoordX = (int) ( (double)oldCoordinates.GetX() + (double)i * cos(direction.fi) );
-		tmpCoordY = (int) ( (double)oldCoordinates.GetY() + (double)i * sin(direction.fi) );
-	
-		if ( (tmpCoordX == CoordX) && (tmpCoordY == CoordY) ) {continue;}
-		if((tmpCoordX > NUMBEROFCELLSX - 1) || (tmpCoordX < 1) ||
-		   (tmpCoordY > NUMBEROFCELLSY - 1) || (tmpCoordX < 1) ) {break; realDelta = -1;}
-
-		CoordX = tmpCoordX;
-		CoordY = tmpCoordY;
-		Cell cell;
-		cell.coordinates.SetX(CoordX);
-		cell.coordinates.SetY(CoordY);
-		cell.cellType = cellType;
-		cell.NeuronId = NeuronId;
-		cell.growthConeId = growthConeId;
-		if(!cellStack->isFull()) {cellStack->stackPush(cell);}
+	double oldX = oldCoordinates.GetX();
+	double oldY = oldCoordinates.GetY();
+	if (delta < 1) {
+		realDelta = 0;
 	}
-	cellStack->PrintStack();
-	realDelta = ( (CoordX - oldCoordinates.GetX())^2 + (CoordY - oldCoordinates.GetY())^2 ) ^ (1/2);
+	else {
+		CellStack *cellStack = cellStack->getStack();
+		int tmpCoordX = (int) (double)oldX;
+		int tmpCoordY = (int) (double)oldY;
+		for(int i = 1; i <= delta; i++) {
+			tmpCoordX = (int) ( (double)oldX + (double)i * cos(direction.fi) );
+			tmpCoordY = (int) ( (double)oldY + (double)i * sin(direction.fi) );
+		
+			if ( (tmpCoordX == CoordX) && (tmpCoordY == CoordY) ) {continue;}
+			if((tmpCoordX > NUMBEROFCELLSX - 1) || (tmpCoordX < 1) ||
+			   (tmpCoordY > NUMBEROFCELLSY - 1) || (tmpCoordY < 1) ) {return -1;}
+
+			CoordX = tmpCoordX;
+			CoordY = tmpCoordY;
+			Cell cell;
+			cell.coordinates.SetX(CoordX);
+			cell.coordinates.SetY(CoordY);
+			cell.cellType = cellType;
+			cell.NeuronId = NeuronId;
+			cell.growthConeId = growthConeId;
+			if(!cellStack->isFull()) {cellStack->stackPush(cell);}
+		}
+		cellStack->PrintStack();
+		if (CoordX == oldX && CoordY == oldY) {
+			realDelta = 0;
+		}
+		else {
+			realDelta = pow( pow( double(CoordX - oldX), 2 ) + pow( double(CoordY - oldY), 2 ), 0.5 );
+		}
+	}
+	TRACE("coordinates", "After finding coordinates real delta is %.2f, new coordinates:", realDelta);
+	PrintCoordinates();
 	return realDelta;
 };
 

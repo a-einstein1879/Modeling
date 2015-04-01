@@ -14,6 +14,7 @@ GrowthCone::GrowthCone() {
 };
 
 void GrowthCone::disableGrowth() {
+	ENTER_FUNCTION("growthCone", "disableGrowth()", "");
 	growthEnabled = false;
 };
 
@@ -22,14 +23,16 @@ bool GrowthCone::isGrowthEnabled() {
 };
 
 void GrowthCone::move(Coordinates coord, double delta) {
-	ENTER_FUNCTION("growthCone", "move(Coordinates coord, double delta)", "delta = %d", delta);
-	coordinates = coord;
+	ENTER_FUNCTION("growthCone", "move(Coordinates coord, double delta)", "delta = %.2f", delta);
+	setCoordinates(coord);
 	increaseSomaDistance(delta);
 	printStats();
 };
 
 void GrowthCone::increaseSomaDistance(double delta) {
+	ENTER_FUNCTION("growthCone", "increaseSomaDistance(double delta)", "delta = %.2f", delta);
 	somaDistance += delta;
+	TRACE("growthCone", "Soma distance is %.2f now", somaDistance);
 };
 
 double GrowthCone::getSomaDistance() {
@@ -37,7 +40,10 @@ double GrowthCone::getSomaDistance() {
 };
 
 void GrowthCone::setCoordinates(Coordinates coord) {
+	ENTER_FUNCTION("growthCone", "setCoordinates(Coordinates coord)", "");
 	coordinates = coord;
+	TRACE("growthCone", "Coordinates now are:");
+	coordinates.PrintCoordinates();
 };
 
 Coordinates GrowthCone::getCoordinates() {
@@ -47,7 +53,7 @@ Coordinates GrowthCone::getCoordinates() {
 void GrowthCone::printStats() {
 	ENTER_FUNCTION("growthCone", "printStats()", "");
 #ifdef GROWTHCONETRACES
-	TRACE("growthCone", "Growth cone stats. Soma distance = %.1e and coordinates are", getSomaDistance());
+	TRACE("growthCone", "Growth cone stats. Soma distance = %.2f and coordinates are", getSomaDistance());
 	coordinates.PrintCoordinates();
 #endif
 };

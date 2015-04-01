@@ -3,10 +3,10 @@
 
 #define NUMBEROFDIMENSIONS 2
 
-#define NUMBEROFCELLSX 20
-#define NUMBEROFCELLSY 20
+#define NUMBEROFCELLSX 30
+#define NUMBEROFCELLSY 30
 
-#define WORKTIME 7
+#define WORKTIME 200
 
 #define MAXNUMBEROFNEURONS 5
 
@@ -19,8 +19,6 @@
 
 #define NEURONCOLOR GREEN
 #define AXONCOLOR   WHITE
-
-#include <stdio.h>
 
 #define dynamicArrayRealloc(type, arrayName, numberOfElements)      \
 	type *tmpArrayName;                                             \
@@ -43,14 +41,27 @@
                                                                     \
 	delete [] tmpArrayName
 
+#include <stdio.h>
+#include <cstring> // For strlen
 
+#define logFileName "log.txt"
 //TODO:create trace groups
-//#define CELLSTACKTRACES
-//#define GROWTHCONETRACES
+//TODO:it`s better to delete log file before program start in program somehow
+#define CELLSTACKTRACES
+#define GROWTHCONETRACES
 //#define CONNECTIONTRACES
-#define TRACE(file, format, ...)      \
-		printf(file);                 \
-		printf(".cpp: ");             \
-		printf(format, __VA_ARGS__);
+#define TRACE(file, format, ...)            \
+		fopen_s(&log, logFileName, "a");    \
+		fprintf(log, file);                 \
+		fprintf(log, ".cpp: ");             \
+		fprintf(log, format, __VA_ARGS__);  \
+		fprintf(log, "\n");                 \
+		fclose(log);
 
+#define ENTER_FUNCTION(file, function, format, ...)      \
+		FILE *log;                                       \
+	    TRACE(file, "Entering function %s", function);   \
+		if(strlen(format) != 0) { \
+			TRACE(file, format, __VA_ARGS__); \
+		}
 #endif

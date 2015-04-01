@@ -17,13 +17,6 @@ protected:
 	Coordinates coordinates;
 	int NeuronId;
 
-	/* Coefficients below and formulas for growth are taken from Mironov, Semyanov, Kazantsev "Dendrite and axon specific geometrical adaptation in neurite development" */
-	double alpha;
-	double betta;
-	double c0;
-	double T;
-	double Vat;
-	double k;
 	void growNeurite(int growthConeId, double delta, bool branching);
 	void growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId);
 
@@ -32,8 +25,7 @@ protected:
 public:
 	Neurite();
 
-	//Should only be used right after creation
-	void setCoordinates(Coordinates coord);
+	void setCoordinates(Coordinates coord);	//Should be used right after creation and nowhere else
 	void setNeuronId(int newId);
 	void setType(int Type);
 
