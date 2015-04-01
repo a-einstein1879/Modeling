@@ -7,8 +7,9 @@
 CellStack* CellStack::p_CellStack = 0;
 
 CellStack::CellStack() {
+	ENTER_FUNCTION("cellStack", "CellStack::CellStack()", "");
 #ifdef CELLSTACKTRACES
-	TRACE("cellStack", "Cell stack created\n"); 
+	TRACE("cellStack", "Cell stack created"); 
 #endif
 	numberOfCells = 0;
 	cells = new Cell[numberOfCells];
@@ -25,6 +26,7 @@ CellStack* CellStack::getStack() {
 };
 
 int CellStack::stackPush(Cell cell) {
+	ENTER_FUNCTION("cellStack", "stackPush()", "");
 	if (numberOfCells < CELLSTACKMAXNUMBEROFCELLS) {
 		Cell *tmpCells;
 
@@ -46,18 +48,19 @@ int CellStack::stackPush(Cell cell) {
 
 		cells[numberOfCells - 1] = cell;
 #ifdef CELLSTACKTRACES
-		TRACE("cellStack", "New element successfully pushed. Stack now has %d elements\n", numberOfCells);
+		TRACE("cellStack", "New element successfully pushed. Stack now has %d elements", numberOfCells);
+		cell.PrintCoordinates();
 #endif
-		PrintStack();
 		return 0;
 	}
 #ifdef CELLSTACKTRACES
-	TRACE("cellStack", "ERROR:Can`t push to stack max number of elements exceeded\n");
+	TRACE("cellStack", "ERROR:Can`t push to stack max number of elements exceeded");
 #endif
 	return 1;
 };
 
 Cell CellStack::stackPull() {
+	ENTER_FUNCTION("cellStack", "stackPull()", "");
 	Cell cell;
 	cell.makeEmpty();
 
@@ -82,9 +85,9 @@ Cell CellStack::stackPull() {
 
 
 #ifdef CELLSTACKTRACES
-		TRACE("cellStack", "element successfully pulled from stack. Stack now has %d elements\n", numberOfCells);
+		TRACE("cellStack", "element successfully pulled from stack. Stack now has %d elements", numberOfCells);
+		cell.PrintCoordinates();
 #endif
-		PrintStack();
 	}
 	return cell;
 };
@@ -97,9 +100,11 @@ bool CellStack::isFull() {
 };
 
 void CellStack::PrintStack() {
+	ENTER_FUNCTION("cellStack", "PrintStack", "");
 	for(int i = 0; i < numberOfCells; i++) {
 #ifdef CELLSTACKTRACES
-		TRACE("cellStack", "Type of element %d is %d, neuronId is %d, growthConeId is %d and coordinates are:\n", i, cells[i].cellType, cells[i].NeuronId, cells[i].growthConeId);
+		//TRACE("cellStack", "");
+		TRACE("cellStack", "Type of element %d is %d, neuronId is %d, growthConeId is %d and coordinates are:", i, cells[i].cellType, cells[i].NeuronId, cells[i].growthConeId);
 		cells[i].coordinates.PrintCoordinates();
 #endif
 	}

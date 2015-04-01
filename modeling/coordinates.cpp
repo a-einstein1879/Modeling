@@ -8,7 +8,8 @@ Coordinates& Coordinates::operator=( Coordinates &coord ) {
 };
 
 void Coordinates::PrintCoordinates() {
-	TRACE("coordinates", "X = %d; Y = %d\n", CoordX, CoordY);
+	ENTER_FUNCTION("coordinates", "PrintCoordinates()", "");
+	TRACE("coordinates", "X = %d; Y = %d", CoordX, CoordY);
 };
 
 void Coordinates::SetX(int x) {
@@ -32,11 +33,15 @@ int Coordinates::GetY() {
 #include "cellStack.h"
 
 double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId) {
-	TRACE("coordinates", "Finding new coordinates for neuron %d growth cone id %d\n", NeuronId, growthConeId);
+	ENTER_FUNCTION("coordinates", "findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId)",
+		"delta = %.2f, direction.fi = %.2f, cellType = %d, NeuronId = %d, growthConeId = %d", delta, direction.fi, cellType, NeuronId, growthConeId);
 	double realDelta;
+	CellStack *cellStack = cellStack->getStack();
+	int tmpCoordX = (int) (double)oldCoordinates.GetX();
+	int tmpCoordY = (int) (double)oldCoordinates.GetY();
 	for(int i = 1; i <= delta; i++) {
-		int tmpCoordX = (int) ( (double)oldCoordinates.GetX() + (double)i * cos(direction.fi) );
-		int tmpCoordY = (int) ( (double)oldCoordinates.GetY() + (double)i * sin(direction.fi) );
+		tmpCoordX = (int) ( (double)oldCoordinates.GetX() + (double)i * cos(direction.fi) );
+		tmpCoordY = (int) ( (double)oldCoordinates.GetY() + (double)i * sin(direction.fi) );
 	
 		if ( (tmpCoordX == CoordX) && (tmpCoordY == CoordY) ) {continue;}
 		if((tmpCoordX > NUMBEROFCELLSX - 1) || (tmpCoordX < 1) ||
@@ -50,9 +55,9 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 		cell.cellType = cellType;
 		cell.NeuronId = NeuronId;
 		cell.growthConeId = growthConeId;
-		CellStack *cellStack = cellStack->getStack();
 		if(!cellStack->isFull()) {cellStack->stackPush(cell);}
 	}
+	cellStack->PrintStack();
 	realDelta = ( (CoordX - oldCoordinates.GetX())^2 + (CoordY - oldCoordinates.GetY())^2 ) ^ (1/2);
 	return realDelta;
 };

@@ -22,6 +22,7 @@ bool GrowthCone::isGrowthEnabled() {
 };
 
 void GrowthCone::move(Coordinates coord, double delta) {
+	ENTER_FUNCTION("growthCone", "move(Coordinates coord, double delta)", "delta = %d", delta);
 	coordinates = coord;
 	increaseSomaDistance(delta);
 	printStats();
@@ -44,8 +45,9 @@ Coordinates GrowthCone::getCoordinates() {
 };
 
 void GrowthCone::printStats() {
+	ENTER_FUNCTION("growthCone", "printStats()", "");
 #ifdef GROWTHCONETRACES
-	TRACE("growthCone", "Growth cone stats. Soma distance = %.1e and coordinates are\n", getSomaDistance());
+	TRACE("growthCone", "Growth cone stats. Soma distance = %.1e and coordinates are", getSomaDistance());
 	coordinates.PrintCoordinates();
 #endif
 };

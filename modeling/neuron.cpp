@@ -8,6 +8,7 @@ void Neuron::resetIdCounter() {
 };
 
 Neuron::Neuron() {
+	ENTER_FUNCTION("neuron", "Neuron::Neuron()", "");
 	if (NeuronCounter < MAXNUMBEROFNEURONS) {
 		NeuronId = NeuronCounter++;
 	};
@@ -21,7 +22,7 @@ Neuron::Neuron() {
 	numberOfConnections = 0;
 	connections = new Connection[numberOfConnections];
 
-	TRACE("neuron", "Neuron with id %d was created\n", NeuronId);
+	TRACE("neuron", "Neuron with id %d was created", NeuronId);
 };
 
 Neuron::~Neuron() {
@@ -31,39 +32,43 @@ Neuron::~Neuron() {
 }
 
 void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinates availability
+	ENTER_FUNCTION("neuron", "setCoordinates(int x, int y)", "x = %d, y = %d", x, y);
 	coord.SetX(x);
 	coord.SetY(y);
 
-	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:\n", NeuronId);
+	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:", NeuronId);
 	coord.PrintCoordinates();
 }
 
 void Neuron::setCoordinates(Coordinates tmpCoord) {//TODO: proper checking of coordinates availability
+	ENTER_FUNCTION("neuron", "setCoordinates(Coordinates tmpCoord)", "");
     coord = tmpCoord;
 
-	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:\n", NeuronId);
+	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:", NeuronId);
 	coord.PrintCoordinates();
 }
 
 int Neuron::addAxon(Coordinates coordinates) {
+	ENTER_FUNCTION("neuron", "addAxon(Coordinates coordinates)", "");
 	dynamicArrayRealloc(Axon, axons, numberOfAxons);
 
 	axons[numberOfAxons - 1].setCoordinates(coordinates);
 	axons[numberOfAxons - 1].setNeuronId(NeuronId);
 	axons[numberOfAxons - 1].setType(AXON);
 	
-	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d\n", NeuronId, numberOfAxons);
+	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d", NeuronId, numberOfAxons);
 	return 0;
 };
 
 int Neuron::addDendrite(Coordinates coordinates) {
+	ENTER_FUNCTION("neuron", "addDendrite(Coordinates coordinates)", "");
 	dynamicArrayRealloc(Dendrite, dendrites, numberOfDendrites);
 
 	dendrites[numberOfDendrites - 1].setCoordinates(coordinates);
 	dendrites[numberOfDendrites - 1].setNeuronId(NeuronId);
 	dendrites[numberOfDendrites - 1].setType(DENDRITE);
 	
-	TRACE("neuron", "Neuron id %d now has new dendrite. The number of dendrites: %d\n", NeuronId, numberOfDendrites);
+	TRACE("neuron", "Neuron id %d now has new dendrite. The number of dendrites: %d", NeuronId, numberOfDendrites);
 	return 0;
 };
 
@@ -88,7 +93,7 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 	connections[numberOfConnections - 1].delay  = (int)axons->getGrowthConeDistance(growthConeId);
 	
 #ifdef CONNECTIONTRACES
-	TRACE("neuron", "Neuron id %d now has new connection with delay %d. The number of connections: %d\n", NeuronId, connections[numberOfConnections - 1].delay,numberOfConnections);
+	TRACE("neuron", "Neuron id %d now has new connection with delay %d. The number of connections: %d", NeuronId, connections[numberOfConnections - 1].delay,numberOfConnections);
 #endif
 	return 0;
 };
@@ -98,9 +103,8 @@ int Neuron::getNeuronId() {
 };
 
 void Neuron::tick() {
-	TRACE("neuron", "Neuron with id %d tick\n", NeuronId);
-	if(numberOfAxons     == 0 && NeuronId == 0) {addAxon(coord);}
-	if(numberOfDendrites == 0 && NeuronId == 1) {addDendrite(coord);}
+	ENTER_FUNCTION("neuron", "Neuron::tick()", "NeuronId = %d", NeuronId);
+	if(numberOfAxons == 0) {addAxon(coord);}
 
 	for(int i = 0; i <numberOfAxons; i++)
 		axons[i].tick();

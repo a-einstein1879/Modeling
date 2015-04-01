@@ -31,42 +31,47 @@ void Hippocampus::checkStack() {
 			Neuron* destination = getNeuronById(neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]);
 			source->addConnection(cell.growthConeId, destination);
 #ifdef CONNECTIONTRACES
-			TRACE("hippocampus", "Added new connection between neuron %d and neuron %d\n", source->getNeuronId(), destination->getNeuronId());
+			TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
 #endif
 		}
 	}
 };
 
-int Hippocampus::addNeuron(int x, int y) { //TODO: fix recursive bug. Add counter to prevent loop
-   if (numberOfNeurons < MAXNUMBEROFNEURONS) {
-      bool availability = false, randomity = false;
-      if ((x == -1) && (y == -1)) {x = rand()%NUMBEROFCELLSX; y = rand()%NUMBEROFCELLSY; randomity = true;}
-      if (getFieldType(x, y) == NOTHING) {availability = true;}
+int Hippocampus::addNeuron(int x, int y) {
+	ENTER_FUNCTION("hippocampus", "addNeuron(int x, int y)", "x = %d, y = %d", x, y);
+	//TODO: fix recursive bug. Add counter to prevent loop
+	//TODO: use cell stack to add neuron
+	if (numberOfNeurons < MAXNUMBEROFNEURONS) {
+		bool availability = false, randomity = false;
+		if ((x == -1) && (y == -1)) {x = rand()%NUMBEROFCELLSX; y = rand()%NUMBEROFCELLSY; randomity = true;}
+		if (getFieldType(x, y) == NOTHING) {availability = true;}
 
-      if (availability == true) {
-            createNeuron();
+		if (availability == true) {
+			createNeuron();
             neurons[numberOfNeurons - 1].setCoordinates(x, y);
             fillField(x, y, NEURON, numberOfNeurons - 1);
-      }
-      else {
-         if (randomity == true)
-            addNeuron();
-         else {
-            TRACE("hippocampus", "Can`t create neuron here (%d, %d)\n", x, y);
-         }
-      }
-   }
-   return 0;
+		}
+		else {
+			if (randomity == true)
+				addNeuron();
+			else {
+				TRACE("hippocampus", "Can`t create neuron here (%d, %d)", x, y);
+			}
+		}
+	}
+	return 0;
 }
 
 void Hippocampus::fillField(int x, int y, char type, int neuronId) {
-   neuronType[x][y] = type;
-   neuronIds[x][y]  = neuronId;
+	ENTER_FUNCTION("hippocampus", "fillField(int x, int y, char type, int neuronId)", "x = %d, y = %d, type = %d, neuronId = %d", x, y, type, neuronId);
+	neuronType[x][y] = type;
+	neuronIds[x][y]  = neuronId;
 
-   TRACE("hippocampus", "Space (%d, %d) is now `%d` type with id %d\n", x, y, getFieldType(x, y), neuronIds[x][y]);
+	TRACE("hippocampus", "Space (%d, %d) is now `%d` type with id %d", x, y, getFieldType(x, y), neuronIds[x][y]);
 }
 
 void Hippocampus::createNeuron() {
+	ENTER_FUNCTION("hippocampus", "createNeuron", "");
 	if (numberOfNeurons < MAXNUMBEROFNEURONS) {
 		Neuron *tmpNeurons;
 		neurons->resetIdCounter();
@@ -82,7 +87,7 @@ void Hippocampus::createNeuron() {
 
 		delete [] tmpNeurons;
 	}
-	TRACE("hippocampus", "Hippocampus now has %d neurons\n", numberOfNeurons);
+	TRACE("hippocampus", "Hippocampus now has %d neurons", numberOfNeurons);
 };
 
 Neuron* Hippocampus::getNeuronById(int neuronId) {
@@ -101,11 +106,11 @@ Neuron* Hippocampus::getNeuronById(int neuronId) {
 /************************/
 
 void Hippocampus::tick() {
-	TRACE("hippocampus", "Hippocampus tick\n");
+	ENTER_FUNCTION("hippocampus", "Hippocampus tick", "");
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
 	checkStack();
-	if(numberOfNeurons == 0) {/*addNeuron(5, 5);*/ addNeuron(2, 15); addNeuron(18, 5);}
+	if(numberOfNeurons == 0) {addNeuron(2, 10); addNeuron(2, 15); addNeuron(2, 5);}
 };
 
 int Hippocampus::getFieldType(int x, int y) {

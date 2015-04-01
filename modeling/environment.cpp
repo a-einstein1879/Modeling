@@ -13,11 +13,12 @@ Environment* Environment::getEnvironment() {
 #include <math.h> //For pi
 struct Direction Environment::getDirection(Coordinates coord) {
 	struct Direction direction;
-	if (coord.GetY() > 10) {
+/*	if (coord.GetY() > 10) {
 		direction.fi = 0;
 	} else {
 		direction.fi = M_PI;
-	}
+	}*/
+	direction.fi = 0;
 	return direction;
 };
 

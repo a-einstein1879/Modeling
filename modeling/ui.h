@@ -2,12 +2,12 @@
 #define UI_H
 
 #include "hippocampus.h"
-//#include <windows.h>
+#include <windows.h>
 
 class GUI {
 private:
-//	HWND hwnd;
-//	HDC hdc;
+	HWND hWnd, hWnd1;
+	HDC hdc;
 
 	int oldTwoDpicture[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	int TwoDpicture[NUMBEROFCELLSX][NUMBEROFCELLSY];

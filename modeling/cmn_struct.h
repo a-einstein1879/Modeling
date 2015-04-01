@@ -14,6 +14,7 @@ public:
 	int NeuronId;
 	int NeuriteId;
 	int growthConeId;
+	void PrintCoordinates();
 
 	void makeEmpty();
 	bool isEmpty();

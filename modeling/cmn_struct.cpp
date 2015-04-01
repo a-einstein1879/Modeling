@@ -16,3 +16,7 @@ void Cell::makeEmpty() {
 bool Cell::isEmpty() {
 	return IsEmpty;
 };
+
+void Cell::PrintCoordinates() {
+	coordinates.PrintCoordinates();
+};
