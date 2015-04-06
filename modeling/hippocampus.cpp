@@ -19,6 +19,7 @@ Hippocampus::Hippocampus() {
 
 #include "cellStack.h"
 void Hippocampus::checkStack() {
+	ENTER_FUNCTION("hippocampus", "checkStack()", "", );
 	CellStack *cellStack = cellStack->getStack();
 	while(!cellStack->isEmpty()) {
 		Cell cell = cellStack->stackPull();
@@ -71,19 +72,19 @@ void Hippocampus::fillField(int x, int y, char type, int neuronId) {
 }
 
 void Hippocampus::createNeuron() {
-	ENTER_FUNCTION("hippocampus", "createNeuron", "");
+	ENTER_FUNCTION("hippocampus", "createNeuron", "numberOfNeurons = %d", numberOfNeurons);
 	if (numberOfNeurons < MAXNUMBEROFNEURONS) {
 		Neuron *tmpNeurons;
 		neurons->resetIdCounter();
 		tmpNeurons = new Neuron[numberOfNeurons];
 		for(int i = 0; i < numberOfNeurons; i++)
-			*(tmpNeurons+i) = neurons[i];
+			tmpNeurons[i] = neurons[i];
 
 		neurons->resetIdCounter();
 		neurons = new Neuron[++numberOfNeurons];
 
 		for(int i = 0; i < numberOfNeurons - 1; i++)
-			neurons[i] = *(tmpNeurons+i);
+			neurons[i] = tmpNeurons[i];
 
 		delete [] tmpNeurons;
 	}
@@ -110,7 +111,12 @@ void Hippocampus::tick() {
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
 	checkStack();
-	if(numberOfNeurons == 0) {addNeuron(2, 5); addNeuron(2, 15); addNeuron(2, 25);}
+	if (numberOfNeurons == 0) {
+		for (int i = 0; i < MAXNUMBEROFNEURONS; i++) {
+			addNeuron();
+		}
+	}
+	//if(numberOfNeurons == 0) {addNeuron(2, 5); addNeuron(2, 15); addNeuron(2, 25); addNeuron(7, 25); addNeuron(3, 25);}
 };
 
 int Hippocampus::getFieldType(int x, int y) {

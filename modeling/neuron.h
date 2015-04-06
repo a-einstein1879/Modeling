@@ -34,7 +34,15 @@ public:
 
 	int addConnection(int growthConeId, Neuron* neuron);
 
+	Neuron& operator=(Neuron &neuron);
 	int getNeuronId();
+	Coordinates getCoordinates();
+	int getNumberOfAxons();
+	int getNumberOfDendrites();
+	Axon getAxon(int neuriteId);
+	Dendrite getDendrite(int neuriteId);
+	int getNumberOfConnections();
+	//struct Connection getConnection(int connectionId);
 
 	void tick();
 };

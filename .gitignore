@@ -81,3 +81,6 @@ modeling/Debug/BuildLog.htm
 modeling/Debug/mt.dep
 modeling/Debug/vc90.idb
 modeling/Debug/vc90.pdb
+*.i
+modeling/Debug/BuildLog.htm
+*.pdb

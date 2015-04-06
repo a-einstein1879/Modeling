@@ -3,7 +3,8 @@
 #include "cmn_defines.h"
 
 Neurite::Neurite() {
-	numberOfGrowthCones = 0;
+	numberOfGrowthCones      = 0;
+	numberOfTerminalElements = 0;
 };
 
 void Neurite::addGrowthCone(int growthConeId) {
@@ -29,10 +30,12 @@ void Neurite::setCoordinates(Coordinates coord) {
 };
 
 void Neurite::setNeuronId(int newId) {
+	ENTER_FUNCTION("neurite", "setNeuronId(int newId)", "newId = %d", newId);
 	NeuronId = newId;
 };
 
 void Neurite::setType(int Type) {
+	ENTER_FUNCTION("neurite", "setType(int Type)", "Type = %d", Type);
 	type = Type;
 };
 
@@ -40,7 +43,7 @@ double Neurite::getGrowthConeDistance(int growthConeId) {
 	return growthCones[growthConeId].getSomaDistance();
 };
 
-void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
+void Neurite::growNeurite(int growthConeId, double delta, int branching) {
 	ENTER_FUNCTION("neurite", "growNeurite(int growthConeId, double delta, bool branching)", "growthConeId = %d, delta = %.2f, branching = %d", growthConeId, delta, branching);
 	if(growthCones[growthConeId].isGrowthEnabled()) {
 		Coordinates oldCoordinates = growthCones[growthConeId].getCoordinates();
@@ -50,7 +53,7 @@ void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
 		Environment *environment = environment->getEnvironment();
 		direction = environment->getDirection(oldCoordinates);
 
-		if (branching == true) {
+		if (branching == 1) {
 			struct Direction twoDirections[2];
 			getTwoDirections(direction, twoDirections);
 			TRACE("neurite", "It`s time to branch now for neuron with neuron id %d and growth cone id %d", NeuronId, growthConeId);
@@ -62,6 +65,8 @@ void Neurite::growNeurite(int growthConeId, double delta, bool branching) {
 		}
 		else {
 			growGrowthCone(oldCoordinates, delta, direction, type, NeuronId, growthConeId);
+			// Second check is added for case growth was disabled while growing out of bounds
+			if (branching == -1 && growthCones[growthConeId].isGrowthEnabled()) {disableGrowth(growthConeId);}
 		}
 	}
 };
@@ -72,12 +77,20 @@ void Neurite::growGrowthCone(Coordinates coord, double delta, struct Direction d
 	TRACE("neurite", "Growth cone %d with neuron id %d grows by %.2f", growthConeId, NeuronId, delta);
 	Coordinates newCoordinates = coord;
 	double realDelta = newCoordinates.findNewCoordinates(coord, delta, direction, type, NeuronId, growthConeId);
-	growthCones[growthConeId].move(newCoordinates, realDelta);
-	if (realDelta == -1) {
-		growthCones[growthConeId].disableGrowth();
-		TRACE("neurite", "Growth cone growth is now disabled. Coordinates:", growthConeId, NeuronId);
-		growthCones[growthConeId].getCoordinates().PrintCoordinates();
+	if (realDelta != -1) {
+		growthCones[growthConeId].move(newCoordinates, realDelta);
 	}
+	else {
+		TRACE("neurite", "realDelta == %.2f; disabling growth", realDelta);
+		disableGrowth(growthConeId);
+	}
+};
+
+void Neurite::disableGrowth(int growthConeId) {
+	ENTER_FUNCTION("neurite", "disableGrowth(int growthConeId)", "growthConeId = %d", growthConeId);
+	growthCones[growthConeId].disableGrowth();
+	numberOfTerminalElements++;
+	TRACE("neurite", "numberOfTerminalElements for neuron %d neurite is now %d", NeuronId, numberOfTerminalElements);
 };
 
 #include <stdlib.h> /* For rand() */
@@ -109,7 +122,9 @@ double Axon::solveEquation(int growthConeId) {
 	return delta;
 };
 
-bool Axon::solveEmbranchmentEquation(int growthConeId) {
+int Axon::solveEmbranchmentEquation(int growthConeId) {
+	// Probability to create terminal segment
+	if(rand()%10 / 10 > 0.8) {return -1;};
 	return rand()%2;
 	//return false;
 };
@@ -132,6 +147,41 @@ double Dendrite::solveEquation(int growthConeId) {
 	return delta;
 };
 
-bool Dendrite::solveEmbranchmentEquation(int growthConeId) {
-	return false;
+int Dendrite::solveEmbranchmentEquation(int growthConeId) {
+	// Probability to create terminal segment
+	//if(rand()%10 / 10 > 0.8) {return -1;};
+	return -1;
+	return rand()%2;
+	//return false;
+};
+
+Neurite& Neurite::operator=(Neurite &neurite) {
+	type = neurite.getType();
+	coordinates = neurite.getCoordinates();
+	NeuronId    = neurite.getNeuronId();
+
+	numberOfGrowthCones = neurite.getNumberOfGrowthCones();
+	for(int i = 0; i < numberOfGrowthCones; i++) {
+		growthCones[i] = neurite.getGrowthCone(i);
+	}
+	return *this;
+};
+
+int Neurite::getType() {
+	return type;
+};
+
+int Neurite::getNumberOfGrowthCones() {
+	return numberOfGrowthCones;
+};
+
+GrowthCone Neurite::getGrowthCone(int growthConeId) {
+	return growthCones[growthConeId];
+};
+
+Coordinates Neurite::getCoordinates() {
+	return coordinates;
+};
+int Neurite::getNeuronId() {
+	return NeuronId;
 };

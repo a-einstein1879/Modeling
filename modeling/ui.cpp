@@ -3,21 +3,26 @@
 #include "ui.h"
 #include "cmn_defines.h"
 
-//#include <windows.h>
+#ifdef GUI
+#include <windows.h>
 
-COLORREF color = RGB(0, 255, 0);
+COLORREF bgColor     = RGB(0,   0,   0);
+COLORREF neuronColor = RGB(0,   255, 0);
+COLORREF axonColor   = RGB(0,   255, 0);
 LRESULT CALLBACK WndProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif
 
 GUI::GUI() {
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
 			oldTwoDpicture[i][j] = NOTHING;
 
-	/*LPCTSTR ClsName = L"BasicApp";
+#ifdef GUI
+	LPCTSTR ClsName = L"BasicApp";
 	LPCTSTR WndName = L"A Simple Window";
 	HINSTANCE hInstance;
 
-	WNDCLASSEX WndClsEx;*/
+	WNDCLASSEX WndClsEx;
 
 	// Create the application window
 	/*WndClsEx.cbSize        = sizeof(WNDCLASSEX);
@@ -34,11 +39,11 @@ GUI::GUI() {
 	WndClsEx.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);*/
 
 	// Register the application
-	/*RegisterClassEx(&WndClsEx);
+	RegisterClassEx(&WndClsEx);
 
 	hWnd = CreateWindowEx(0, ClsName, WndName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
-	hWnd1 = GetTopWindow(hWnd);*/
-		//CreateWindow(ClsName, WndName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hWnd, NULL, hInstance, NULL);
+	hWnd1 = CreateWindow(ClsName, WndName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hWnd, NULL, hInstance, NULL);
+		//GetTopWindow(hWnd);
 	//GetConsoleWindow();
   /*LPCTSTR lpClassName,  // им€ класса
   LPCTSTR lpWindowName, // им€ окна (отображаетс€  в заголовке)
@@ -52,19 +57,22 @@ GUI::GUI() {
   HINSTANCE hInstance, // экземпл€р приложени€
   LPVOID lpParam       // параметр; всегда ставьте NULL
 );*/
-	/*ShowWindow(hWnd1, SW_SHOWNORMAL);
+	ShowWindow(hWnd1, SW_SHOWNORMAL);
 	UpdateWindow(hWnd1);
 	hdc = GetDC(hWnd1);
 	for(int j = 0; j < NUMBEROFCELLSY; j++)
 		for(int i = 0; i < NUMBEROFCELLSX; i++) {
 			;
-			SetPixel(hdc, i, j, color);
-		}*/
+			SetPixel(hdc, i, j, bgColor);
+		}
+#endif
 };
 
 GUI::~GUI() {
-	/*ReleaseDC(hWnd, hdc);
-	DeleteDC(hdc);*/
+#ifdef GUI
+	ReleaseDC(hWnd, hdc);
+	DeleteDC(hdc);
+#endif
 };
 
 void GUI::create2Dpicture() {
@@ -73,26 +81,41 @@ void GUI::create2Dpicture() {
 };
 
 #include <stdio.h>
+#include <cstdlib>
 void GUI::print2Dpicture() {
-/*	for(int j = 0; j < NUMBEROFCELLSY; j++)
+	if(changed == false) {return;}
+#ifdef GUI
+	for(int j = 0; j < NUMBEROFCELLSY; j++)
 		for(int i = 0; i < NUMBEROFCELLSX; i++) {
 			if (TwoDpicture[i][j] == oldTwoDpicture[i][j]) {continue;}
-			if (TwoDpicture[i][j] == NEURON) {};
-			if (TwoDpicture[i][j] == AXON)   {};
-		}*/
-	
+			if (TwoDpicture[i][j] == NEURON) {SetPixel(hdc, i, j, neuronColor);};
+			if (TwoDpicture[i][j] == AXON)   {SetPixel(hdc, i, j, axonColor);};
+		}
+#endif
+
+#ifdef CLUI
+#ifdef TRACEINFILE
+	if (system("CLS")) system("clear");
+#endif
 	for(int j = 0; j < NUMBEROFCELLSY; j++) {
 		for(int i = 0; i < NUMBEROFCELLSX; i++)
 			printf("%d ", TwoDpicture[i][j]);
 		printf("\n");
 	}
 	printf("\n");
+	for(int i = 0; i < NUMBEROFCELLSX; i++)
+		for(int j = 0; j < NUMBEROFCELLSY; j++)
+			oldTwoDpicture[i][j] = TwoDpicture[i][j];
+#endif
 };
 
 void GUI::getHippocampusCoordinates() {
+	changed = false;
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
-		for(int j = 0; j < NUMBEROFCELLSY; j++)
+		for(int j = 0; j < NUMBEROFCELLSY; j++) {
 			TwoDpicture[i][j] = hippocampus->getFieldType(i, j);
+			if (oldTwoDpicture[i][j] != TwoDpicture[i][j]) {changed = true;};
+		}
 };
 
 /* Interface */

@@ -12,7 +12,7 @@ private:
 	bool growthEnabled;
 	Coordinates coordinates;
 public:
-	GrowthCone& operator=( GrowthCone &growthCone );
+	GrowthCone& operator=(GrowthCone &growthCone);
 	GrowthCone();
 	void disableGrowth();
 	bool isGrowthEnabled();

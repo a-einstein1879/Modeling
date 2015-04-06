@@ -21,10 +21,12 @@ void Processor::Tick() {
 
 #include <ctime>    /* For time(0) seed */
 void Processor::Run() {
+	ENTER_FUNCTION("processor", "Processor::Run()", "");
 	srand(time(0));
 	int i = 0;
 	while(i < WORKTIME) {
 		i++;
+		TRACE("processor", "tick(%d)", i);
 		Tick();
 	}
 	system("pause");

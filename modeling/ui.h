@@ -11,6 +11,8 @@ private:
 
 	int oldTwoDpicture[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	int TwoDpicture[NUMBEROFCELLSX][NUMBEROFCELLSY];
+	bool changed;
+
 	Hippocampus* hippocampus;
 	void create2Dpicture();
 	void print2Dpicture();

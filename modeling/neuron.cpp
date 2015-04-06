@@ -64,15 +64,16 @@ int Neuron::addDendrite(Coordinates coordinates) {
 	ENTER_FUNCTION("neuron", "addDendrite(Coordinates coordinates)", "");
 	dynamicArrayRealloc(Dendrite, dendrites, numberOfDendrites);
 
-	dendrites[numberOfDendrites - 1].setCoordinates(coordinates);
-	dendrites[numberOfDendrites - 1].setNeuronId(NeuronId);
 	dendrites[numberOfDendrites - 1].setType(DENDRITE);
+	dendrites[numberOfDendrites - 1].setNeuronId(NeuronId);
+	dendrites[numberOfDendrites - 1].setCoordinates(coordinates);
 	
 	TRACE("neuron", "Neuron id %d now has new dendrite. The number of dendrites: %d", NeuronId, numberOfDendrites);
 	return 0;
 };
 
 int Neuron::addConnection(int growthConeId, Neuron* neuron) {
+	ENTER_FUNCTION("neuron", "addConnection(int growthConeId, Neuron* neuron)", "Source: neuronId = %d, Destination: neuronId = %d; growthConeId = %d", NeuronId, neuron->getNeuronId(), growthConeId);
 	Connection *tmpConnections;
 	tmpConnections = new Connection[numberOfConnections];
 	for(int i = 0; i < numberOfConnections; i++) {
@@ -90,7 +91,9 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 	delete [] tmpConnections;
 
 	connections[numberOfConnections - 1].neuron = neuron;
-	connections[numberOfConnections - 1].delay  = (int)axons->getGrowthConeDistance(growthConeId);
+
+	connections[numberOfConnections - 1].delay  = 1;
+		//(int)axons->getGrowthConeDistance(growthConeId);
 	
 #ifdef CONNECTIONTRACES
 	TRACE("neuron", "Neuron id %d now has new connection with delay %d. The number of connections: %d", NeuronId, connections[numberOfConnections - 1].delay,numberOfConnections);
@@ -98,17 +101,70 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 	return 0;
 };
 
+void Neuron::tick() {
+	ENTER_FUNCTION("neuron", "Neuron::tick()", "NeuronId = %d", NeuronId);
+
+#ifdef AXONGROWTH
+	if(numberOfAxons     == 0) {addAxon(coord);}
+	for(int i = 0; i <numberOfAxons; i++)
+		axons[i].tick();
+#endif
+
+#ifdef DENDRITEGROWTH
+	if(numberOfDendrites == 0) {addDendrite(coord);}
+	for(int i = 0; i <numberOfDendrites; i++)
+		dendrites[i].tick();
+#endif
+};
+
+Neuron& Neuron::operator=(Neuron &neuron) {
+	NeuronId          = neuron.getNeuronId();
+	coord             = neuron.getCoordinates();
+
+	numberOfAxons     = neuron.getNumberOfAxons();
+	/*for(int i = 0; i < numberOfAxons; i++)
+		axons[i]      = neuron.getAxon(i);
+
+	numberOfDendrites = neuron.getNumberOfDendrites();
+	for(int i = 0; i < numberOfDendrites; i++)
+		dendrites[i]  = neuron.getDendrite(i);*/
+
+	numberOfConnections = neuron.getNumberOfConnections();
+/*	for(int i = 0; i < numberOfConnections; i++) {
+		connections[i].neuron = neuron.getConnection(i).neuron;
+		connections[i].delay  = neuron.getConnection(i).delay;
+	}*/
+	return *this;
+};
+
 int Neuron::getNeuronId() {
 	return NeuronId;
 };
 
-void Neuron::tick() {
-	ENTER_FUNCTION("neuron", "Neuron::tick()", "NeuronId = %d", NeuronId);
-	if(numberOfAxons == 0) {addAxon(coord);}
-
-	for(int i = 0; i <numberOfAxons; i++)
-		axons[i].tick();
-
-	for(int i = 0; i <numberOfDendrites; i++)
-		dendrites[i].tick();
+Coordinates Neuron::getCoordinates() {
+	return coord;
 };
+
+int Neuron::getNumberOfAxons() {
+	return numberOfAxons;
+};
+
+int Neuron::getNumberOfDendrites() {
+	return numberOfDendrites;
+};
+
+Axon Neuron::getAxon(int neuriteId) {
+	return axons[neuriteId];
+};
+
+Dendrite Neuron::getDendrite(int neuriteId) {
+	return dendrites[neuriteId];
+};
+
+int Neuron::getNumberOfConnections() {
+	return numberOfConnections;
+};
+
+/*struct Connection Neuron::getConnection(int connectionId) {
+	return connections[connectionId];
+};*/

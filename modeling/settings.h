@@ -1,0 +1,24 @@
+#ifndef SETTINGS_H
+#define SETTINGS_H
+
+#define NUMBEROFDIMENSIONS 2
+
+#define NUMBEROFCELLSX 30
+#define NUMBEROFCELLSY 30
+
+#define WORKTIME 200
+
+#define MAXNUMBEROFNEURONS 5
+
+#define CLUI
+//#define GUI
+
+#define TRACEINFILE
+#define logFileName "log.txt"
+#define CELLSTACKTRACES
+#define GROWTHCONETRACES
+//#define CONNECTIONTRACES
+
+//#define AXONGROWTH
+#define DENDRITEGROWTH
+#endif

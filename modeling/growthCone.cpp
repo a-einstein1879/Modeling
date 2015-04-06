@@ -1,7 +1,7 @@
 #include "growthCone.h"
 #include "cmn_defines.h"
 
-GrowthCone& GrowthCone::operator=( GrowthCone &growthCone ) {
+GrowthCone& GrowthCone::operator=(GrowthCone &growthCone) {
 	growthEnabled = growthCone.isGrowthEnabled();
 	somaDistance  = growthCone.getSomaDistance();
 	coordinates   = growthCone.getCoordinates();
@@ -14,7 +14,8 @@ GrowthCone::GrowthCone() {
 };
 
 void GrowthCone::disableGrowth() {
-	ENTER_FUNCTION("growthCone", "disableGrowth()", "");
+	ENTER_FUNCTION("growthCone", "disableGrowth()", "Coordinates are:");
+	coordinates.PrintCoordinates();
 	growthEnabled = false;
 };
 
