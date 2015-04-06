@@ -1,16 +1,17 @@
 #include "growthCone.h"
 #include "cmn_defines.h"
 
-GrowthCone& GrowthCone::operator=(GrowthCone &growthCone) {
-	growthEnabled = growthCone.isGrowthEnabled();
-	somaDistance  = growthCone.getSomaDistance();
-	coordinates   = growthCone.getCoordinates();
-	return *this;
-};
-
 GrowthCone::GrowthCone() {
 	growthEnabled = true;
 	somaDistance  = 0;
+	centrifugalOrder = 1;
+};
+
+void GrowthCone::setCoordinates(Coordinates coord) {
+	ENTER_FUNCTION("growthCone", "setCoordinates(Coordinates coord)", "");
+	coordinates = coord;
+	TRACE("growthCone", "Coordinates now are:");
+	coordinates.PrintCoordinates();
 };
 
 void GrowthCone::disableGrowth() {
@@ -36,25 +37,39 @@ void GrowthCone::increaseSomaDistance(double delta) {
 	TRACE("growthCone", "Soma distance is %.2f now", somaDistance);
 };
 
-double GrowthCone::getSomaDistance() {
-	return somaDistance;
+void GrowthCone::increaseCentrifugalOrder() {
+	ENTER_FUNCTION("growthCone", "increaseCentrifugalOrder()", "");
+	centrifugalOrder++;
+	TRACE("growthCone", "Centrifugal order is now %d", centrifugalOrder);
 };
 
-void GrowthCone::setCoordinates(Coordinates coord) {
-	ENTER_FUNCTION("growthCone", "setCoordinates(Coordinates coord)", "");
-	coordinates = coord;
-	TRACE("growthCone", "Coordinates now are:");
-	coordinates.PrintCoordinates();
+/*****************
+	Interface
+*****************/
+GrowthCone& GrowthCone::operator=(GrowthCone &growthCone) {
+	growthEnabled    = growthCone.isGrowthEnabled();
+	somaDistance     = growthCone.getSomaDistance();
+	coordinates      = growthCone.getCoordinates();
+	centrifugalOrder = growthCone.getCentrifugalOrder();
+	return *this;
+};
+
+double GrowthCone::getSomaDistance() {
+	return somaDistance;
 };
 
 Coordinates GrowthCone::getCoordinates() {
 	return coordinates;
 };
 
+int GrowthCone::getCentrifugalOrder() {
+	return centrifugalOrder;
+};
+
 void GrowthCone::printStats() {
 	ENTER_FUNCTION("growthCone", "printStats()", "");
 #ifdef GROWTHCONETRACES
-	TRACE("growthCone", "Growth cone stats. Soma distance = %.2f and coordinates are", getSomaDistance());
+	TRACE("growthCone", "Growth cone stats. Soma distance = %.2f, centrifugalOrder = %d and coordinates are", getSomaDistance(), centrifugalOrder);
 	coordinates.PrintCoordinates();
 #endif
 };

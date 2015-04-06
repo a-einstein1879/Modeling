@@ -21,6 +21,7 @@ protected:
 	void growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId);
 	int numberOfTerminalElements;
 	void disableGrowth(int growthConeId);
+	void increaseGrowthConeCentrifugalOrder(int growthConeId);
 
 	virtual double solveEquation(int growthConeId) = 0;
 	virtual int solveEmbranchmentEquation(int growthConeId) = 0;

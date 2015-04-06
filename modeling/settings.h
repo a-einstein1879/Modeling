@@ -14,10 +14,12 @@
 //#define GUI
 
 #define TRACEINFILE
-#define logFileName "log.txt"
 #define CELLSTACKTRACES
 #define GROWTHCONETRACES
 //#define CONNECTIONTRACES
+
+#define LOGFILENAME     "log.txt"
+#define STATISTICSFILE  "stats.txt"
 
 //#define AXONGROWTH
 #define DENDRITEGROWTH

@@ -57,6 +57,7 @@ void Neurite::growNeurite(int growthConeId, double delta, int branching) {
 			struct Direction twoDirections[2];
 			getTwoDirections(direction, twoDirections);
 			TRACE("neurite", "It`s time to branch now for neuron with neuron id %d and growth cone id %d", NeuronId, growthConeId);
+			increaseGrowthConeCentrifugalOrder(growthConeId);
 			addGrowthCone(growthConeId);
 
 			growGrowthCone(oldCoordinates, delta, twoDirections[0], type, NeuronId, numberOfGrowthCones - 1);
@@ -93,6 +94,11 @@ void Neurite::disableGrowth(int growthConeId) {
 	TRACE("neurite", "numberOfTerminalElements for neuron %d neurite is now %d", NeuronId, numberOfTerminalElements);
 };
 
+void Neurite::increaseGrowthConeCentrifugalOrder(int growthConeId) {
+	ENTER_FUNCTION("neurite", "increaseGrowthConeCentrifugalOrder(int growthConeId)", "growthConeId = %d", growthConeId);
+	growthCones[growthConeId].increaseCentrifugalOrder();
+};
+
 #include <stdlib.h> /* For rand() */
 
 void Neurite::tick() {
@@ -123,8 +129,6 @@ double Axon::solveEquation(int growthConeId) {
 };
 
 int Axon::solveEmbranchmentEquation(int growthConeId) {
-	// Probability to create terminal segment
-	if(rand()%10 / 10 > 0.8) {return -1;};
 	return rand()%2;
 	//return false;
 };
@@ -147,13 +151,28 @@ double Dendrite::solveEquation(int growthConeId) {
 	return delta;
 };
 
+#include <math.h>
+/* All statistic formulas are taken from Jaap van Pelt, Harry B.M. Uylings "Modeling Neuronal Growth and Shape" - pp 195-215 */
+#define E     (double)1
+#define D(t)  (double)1
+#define S     (double)1
+#define gamma (double)growthCones[growthConeId].getCentrifugalOrder()
+#define C(t)  (double)1
 int Dendrite::solveEmbranchmentEquation(int growthConeId) {
-	// Probability to create terminal segment
+	ENTER_FUNCTION("neurite", "Dendrite::solveEmbranchmentEquation(int growthConeId)", "growthConeId = %d", growthConeId);
+	/* Probability to create terminal segment */
 	//if(rand()%10 / 10 > 0.8) {return -1;};
-	return -1;
-	return rand()%2;
-	//return false;
+	double branchingProbability = D(t) * pow(numberOfGrowthCones, -E) * pow(2, - S * gamma) / C(t);
+	if (branchingProbability > 1 || branchingProbability < 0) {TRACE("neurite", "ERROR!!!!!!!!!!!!!!!!!!branchingProbability < 0 or > 1\n\n\n\n\n\n\n");}
+	TRACE("neurite", "numberOfGrowthCones = %d, gamma = %d, branchingProbability = %.2f", numberOfGrowthCones, gamma, branchingProbability);
+	if(rand()%100 / 100 < branchingProbability) {return 1;};
+	return 0;
 };
+#undef E
+#undef D
+#undef S
+#undef gamma
+#undef C
 
 Neurite& Neurite::operator=(Neurite &neurite) {
 	type = neurite.getType();

@@ -34,13 +34,11 @@
 #include <stdio.h>
 #include <cstring> // For strlen
 
-
-
 #ifdef TRACEINFILE
 //TODO:create trace groups
 //TODO:it`s better to delete log file before program start in program somehow
 #define TRACE(file, format, ...)            \
-		fopen_s(&log, logFileName, "a");    \
+		fopen_s(&log, LOGFILENAME, "a");    \
 		fprintf(log, file);                 \
 		fprintf(log, ".cpp: ");             \
 		fprintf(log, format, __VA_ARGS__);  \
