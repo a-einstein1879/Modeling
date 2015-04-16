@@ -6,13 +6,14 @@
 #ifdef GUI
 #include <windows.h>
 
-COLORREF bgColor     = RGB(0,   0,   0);
-COLORREF neuronColor = RGB(0,   255, 0);
-COLORREF axonColor   = RGB(0,   255, 0);
+COLORREF bgColor       = RGB(0,   0,   0);
+COLORREF neuronColor   = RGB(0,   255, 0);
+COLORREF axonColor     = RGB(255, 0,   0);
+COLORREF dendriteColor = RGB(0,   0,   255);
 LRESULT CALLBACK WndProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
 
-GUI::GUI() {
+UI::UI() {
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
 			oldTwoDpicture[i][j] = NOTHING;
@@ -68,28 +69,29 @@ GUI::GUI() {
 #endif
 };
 
-GUI::~GUI() {
+UI::~UI() {
 #ifdef GUI
 	ReleaseDC(hWnd, hdc);
 	DeleteDC(hdc);
 #endif
 };
 
-void GUI::create2Dpicture() {
+void UI::create2Dpicture() {
 	getHippocampusCoordinates();
 	if (NUMBEROFDIMENSIONS == 2) {return;}
 };
 
 #include <stdio.h>
 #include <cstdlib>
-void GUI::print2Dpicture() {
+void UI::print2Dpicture() {
 	if(changed == false) {return;}
 #ifdef GUI
 	for(int j = 0; j < NUMBEROFCELLSY; j++)
 		for(int i = 0; i < NUMBEROFCELLSX; i++) {
 			if (TwoDpicture[i][j] == oldTwoDpicture[i][j]) {continue;}
-			if (TwoDpicture[i][j] == NEURON) {SetPixel(hdc, i, j, neuronColor);};
-			if (TwoDpicture[i][j] == AXON)   {SetPixel(hdc, i, j, axonColor);};
+			if (TwoDpicture[i][j] == NEURON)  {SetPixel(hdc, i, j, neuronColor);};
+			if (TwoDpicture[i][j] == AXON)    {SetPixel(hdc, i, j, axonColor);};
+			if (TwoDpicture[i][j] == DENDRITE){SetPixel(hdc, i, j, dendriteColor);};
 		}
 #endif
 
@@ -109,7 +111,7 @@ void GUI::print2Dpicture() {
 #endif
 };
 
-void GUI::getHippocampusCoordinates() {
+void UI::getHippocampusCoordinates() {
 	changed = false;
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++) {
@@ -119,12 +121,12 @@ void GUI::getHippocampusCoordinates() {
 };
 
 /* Interface */
-void GUI::tick() {
+void UI::tick() {
 	ENTER_FUNCTION("GUI", "GUI::tick()", "");
 	create2Dpicture();
 	print2Dpicture();
 };
 
-void GUI::addHippocampus(Hippocampus* hippo) {
+void UI::addHippocampus(Hippocampus* hippo) {
 	hippocampus = hippo;
 };

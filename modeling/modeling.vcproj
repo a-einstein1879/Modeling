@@ -262,6 +262,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\settings.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ui.h"
 				>
 			</File>

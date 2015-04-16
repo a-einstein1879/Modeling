@@ -3,7 +3,6 @@
 
 /* For random */
 #include <cstdlib>
-#include <ctime>
 
 Hippocampus::Hippocampus() {
 	numberOfNeurons = 0;
@@ -112,6 +111,8 @@ void Hippocampus::tick() {
 		neurons[i].tick();
 	checkStack();
 	if (numberOfNeurons == 0) {
+		addNeuron(10, 10);
+		addNeuron(10, 14);
 		for (int i = 0; i < MAXNUMBEROFNEURONS; i++) {
 			addNeuron();
 		}

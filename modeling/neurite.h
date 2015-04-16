@@ -9,6 +9,7 @@ class Neurite {
 protected:
 	//Axon AXON, dendrite DENDRITE
 	int type;
+	int neuronType;
 
 	int numberOfGrowthCones;
 	GrowthCone *growthCones;
@@ -23,6 +24,8 @@ protected:
 	void disableGrowth(int growthConeId);
 	void increaseGrowthConeCentrifugalOrder(int growthConeId);
 
+	void printTerminationStats(int growthConeId);
+
 	virtual double solveEquation(int growthConeId) = 0;
 	virtual int solveEmbranchmentEquation(int growthConeId) = 0;
 public:
@@ -31,6 +34,7 @@ public:
 	void setCoordinates(Coordinates coord);	//Should be used right after creation and nowhere else
 	void setNeuronId(int newId);
 	void setType(int Type);
+	void setNeuronType(int Type);
 
 	Neurite& operator=(Neurite &neurite);
 	int getType();
@@ -38,6 +42,7 @@ public:
 	GrowthCone getGrowthCone(int growthConeId);
 	Coordinates getCoordinates();
 	int getNeuronId();
+	int getNeuronType();
 
 	double getGrowthConeDistance(int growthConeId);
 	void tick();

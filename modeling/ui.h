@@ -2,12 +2,16 @@
 #define UI_H
 
 #include "hippocampus.h"
+#ifdef GUI
 #include <windows.h>
+#endif
 
-class GUI {
+class UI {
 private:
+#ifdef GUI
 	HWND hWnd, hWnd1;
 	HDC hdc;
+#endif
 
 	int oldTwoDpicture[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	int TwoDpicture[NUMBEROFCELLSX][NUMBEROFCELLSY];
@@ -18,8 +22,8 @@ private:
 	void print2Dpicture();
 	void getHippocampusCoordinates();
 public:
-	GUI();
-	~GUI();
+	UI();
+	~UI();
 	void tick();
 	void addHippocampus(Hippocampus* hippo);
 };

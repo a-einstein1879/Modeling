@@ -64,4 +64,10 @@
 			TRACE(file, format, __VA_ARGS__); \
 		}
 #endif
+
+#define STATISTICS(format, ...)             \
+		fopen_s(&log, STATISTICSFILE, "a"); \
+		fprintf(log, format, __VA_ARGS__);  \
+		fprintf(log, "\n");                 \
+		fclose(log);
 #endif

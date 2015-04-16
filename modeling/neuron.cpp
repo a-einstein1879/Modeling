@@ -7,11 +7,15 @@ void Neuron::resetIdCounter() {
    NeuronCounter = 0;
 };
 
+/* For random */
+#include <cstdlib>
 Neuron::Neuron() {
 	ENTER_FUNCTION("neuron", "Neuron::Neuron()", "");
 	if (NeuronCounter < MAXNUMBEROFNEURONS) {
 		NeuronId = NeuronCounter++;
 	};
+	neuronType = NeuronId;
+		//rand()%NUMBEROFNEURONTYPES;
 
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
@@ -54,6 +58,7 @@ int Neuron::addAxon(Coordinates coordinates) {
 
 	axons[numberOfAxons - 1].setType(AXON);
 	axons[numberOfAxons - 1].setNeuronId(NeuronId);
+	axons[numberOfAxons - 1].setNeuronType(neuronType);
 	axons[numberOfAxons - 1].setCoordinates(coordinates);
 	
 	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d", NeuronId, numberOfAxons);
@@ -66,6 +71,7 @@ int Neuron::addDendrite(Coordinates coordinates) {
 
 	dendrites[numberOfDendrites - 1].setType(DENDRITE);
 	dendrites[numberOfDendrites - 1].setNeuronId(NeuronId);
+	dendrites[numberOfDendrites - 1].setNeuronType(neuronType);
 	dendrites[numberOfDendrites - 1].setCoordinates(coordinates);
 	
 	TRACE("neuron", "Neuron id %d now has new dendrite. The number of dendrites: %d", NeuronId, numberOfDendrites);
@@ -120,6 +126,7 @@ void Neuron::tick() {
 Neuron& Neuron::operator=(Neuron &neuron) {
 	NeuronId          = neuron.getNeuronId();
 	coord             = neuron.getCoordinates();
+	neuronType        = neuron.getNeuronType();
 
 	numberOfAxons     = neuron.getNumberOfAxons();
 	/*for(int i = 0; i < numberOfAxons; i++)
@@ -143,6 +150,10 @@ int Neuron::getNeuronId() {
 
 Coordinates Neuron::getCoordinates() {
 	return coord;
+};
+
+int Neuron::getNeuronType() {
+	return neuronType;
 };
 
 int Neuron::getNumberOfAxons() {

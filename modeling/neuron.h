@@ -8,6 +8,7 @@ class Neuron {
 private:
 	int NeuronId;
 	Coordinates coord;
+	int neuronType;
 
 	int addAxon(Coordinates coordinates);
 	int numberOfAxons;
@@ -37,6 +38,7 @@ public:
 	Neuron& operator=(Neuron &neuron);
 	int getNeuronId();
 	Coordinates getCoordinates();
+	int getNeuronType();
 	int getNumberOfAxons();
 	int getNumberOfDendrites();
 	Axon getAxon(int neuriteId);
