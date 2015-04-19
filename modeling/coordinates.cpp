@@ -10,7 +10,7 @@ Coordinates& Coordinates::operator=( Coordinates &coord ) {
 void Coordinates::PrintCoordinates() {
 	ENTER_FUNCTION("coordinates", "PrintCoordinates()", "");
 	TRACE("coordinates", "X = %d; Y = %d", CoordX, CoordY);
-	if(CoordX > NUMBEROFCELLSX || CoordY > NUMBEROFCELLSY || CoordX < 0 || CoordY < 0) {TRACE("coordinates", "ERROR!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n");}
+	if(!XYCORRECTIONCHECKER(CoordX, CoordY)) {TRACE("coordinates", "ERROR!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n");}
 };
 
 void Coordinates::SetX(int x) {
@@ -52,8 +52,7 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 			tmpCoordY = (int) ( (double)oldY + (double)i * sin(direction.fi) );
 		
 			if ( (tmpCoordX == CoordX) && (tmpCoordY == CoordY) ) {continue;}
-			if((tmpCoordX > NUMBEROFCELLSX - 1) || (tmpCoordX < 1) ||
-			   (tmpCoordY > NUMBEROFCELLSY - 1) || (tmpCoordY < 1) ) {return -1;}
+			if (!XYCORRECTIONCHECKER(tmpCoordX, tmpCoordY)) {return -1;}
 
 			CoordX = tmpCoordX;
 			CoordY = tmpCoordY;

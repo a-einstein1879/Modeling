@@ -1,5 +1,3 @@
-//#include "stdafx.h"
-//#include "afxwin.h"
 #include "ui.h"
 #include "cmn_defines.h"
 
@@ -97,7 +95,7 @@ void UI::print2Dpicture() {
 
 #ifdef CLUI
 #ifdef TRACEINFILE
-	if (system("CLS")) system("clear");
+//	if(system("CLS")) system("clear");
 #endif
 	for(int j = 0; j < NUMBEROFCELLSY; j++) {
 		for(int i = 0; i < NUMBEROFCELLSX; i++)
@@ -108,6 +106,9 @@ void UI::print2Dpicture() {
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
 			oldTwoDpicture[i][j] = TwoDpicture[i][j];
+#endif
+#ifdef STEPBYSTEP
+	system("pause");
 #endif
 };
 

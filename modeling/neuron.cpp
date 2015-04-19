@@ -14,8 +14,7 @@ Neuron::Neuron() {
 	if (NeuronCounter < MAXNUMBEROFNEURONS) {
 		NeuronId = NeuronCounter++;
 	};
-	neuronType = NeuronId;
-		//rand()%NUMBEROFNEURONTYPES;
+	neuronType = rand()%NUMBEROFNEURONTYPES;
 
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
@@ -109,17 +108,26 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 
 void Neuron::tick() {
 	ENTER_FUNCTION("neuron", "Neuron::tick()", "NeuronId = %d", NeuronId);
+	Environment *environment;
+	environment = environment->getEnvironment();
+	environment->addSource(coord, neuronType);
 
 #ifdef AXONGROWTH
-	if(numberOfAxons     == 0) {addAxon(coord);}
-	for(int i = 0; i <numberOfAxons; i++)
-		axons[i].tick();
+	if(numberOfAxons != 0) {
+		for(int i = 0; i < numberOfAxons; i++)
+			axons[i].tick();
+	} else { 
+		addAxon(coord);
+	}
 #endif
 
 #ifdef DENDRITEGROWTH
-	if(numberOfDendrites == 0) {addDendrite(coord);}
-	for(int i = 0; i <numberOfDendrites; i++)
-		dendrites[i].tick();
+	if(numberOfDendrites != 0) {
+		for(int i = 0; i < numberOfDendrites; i++)
+			dendrites[i].tick();
+	} else {
+		addDendrite(coord);
+	}
 #endif
 };
 

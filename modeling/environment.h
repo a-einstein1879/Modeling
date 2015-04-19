@@ -57,6 +57,7 @@ public:
 
 	struct Direction getDirection(Coordinates coord, int type);
 	void addSource(Coordinates coord, int type);
+	void printSources();
 
 	void tick();
 };

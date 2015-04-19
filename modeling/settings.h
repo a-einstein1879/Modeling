@@ -3,25 +3,25 @@
 
 #define NUMBEROFDIMENSIONS 2
 
-#define NUMBEROFCELLSX 20
-#define NUMBEROFCELLSY 20
+#define NUMBEROFCELLSX 300
+#define NUMBEROFCELLSY 300
 
-#define WORKTIME 5
+#define WORKTIME 1000
 
-#define MAXNUMBEROFNEURONS 2
+#define MAXNUMBEROFNEURONS 50
 #define MAXNUMBEROFGROWTHCONES 16
 
-#define INTERACTION00 ( double(0 ) )
-#define INTERACTION01 ( double(0 ) )
-#define INTERACTION11 ( double(0 ) )
-#define INTERACTION10 ( double(1) )
+#define INTERACTION00 ( 0.0 )
+#define INTERACTION01 ( 0.0 )
+#define INTERACTION10 ( 1.0 )
+#define INTERACTION11 ( 0.0 )
 #define NUMBEROFNEURONTYPES 2
-/*#define INTERACTION(type1, type2) ( double(INTERACTION##type1##type2) )*/
 //#define DIFFUSIONVISIBLE
 
-#define CLUI
-//#define GUI
+//#define CLUI
+#define GUI
 
+//#define STEPBYSTEP
 #define TRACEINFILE
 //#define CELLSTACKTRACES
 //#define GROWTHCONETRACES

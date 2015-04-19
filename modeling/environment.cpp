@@ -12,6 +12,7 @@ Environment::Environment() {
 Environment* Environment::p_environment = 0;
 
 Environment* Environment::getEnvironment() {
+	ENTER_FUNCTION("environment", "Environment::getEnvironment()", "");
 	if(!p_environment)
 		p_environment = new Environment();
 	return p_environment;
@@ -22,12 +23,12 @@ double interaction(int type1, int type2) {
 	if(type1 == 0 && type2 == 1) {return INTERACTION01;}
 	if(type1 == 1 && type2 == 0) {return INTERACTION10;}
 	if(type1 == 1 && type2 == 1) {return INTERACTION11;}
+	return 12;
 };
 
 #if (NUMBEROFDIMENSIONS == 2)
 #define DX(x, y, type) ( double( field[x + 1][y][type] - field[x][y][type] / 1.0 ) )
 #define DY(x, y, type) ( double( field[x][y + 1][type] - field[x][y][type] / 1.0 ) )
-// / pow( pow(DX(x, y, type), 2.0) + pow(DY(x, y, type), 2.0) , 0.5 ) )
 #endif
 #define _USE_MATH_DEFINES //for Pi in visual studio 2009 and earlier
 #include <math.h> //For pi
@@ -39,13 +40,23 @@ struct Direction Environment::getDirection(Coordinates coord, int type) {
 	int x = coord.GetX(), y = coord.GetY();
 	double dx = 0, dy = 0;
 	for(int i = 0; i < NUMBEROFNEURONTYPES; i++) {
-		dx += interaction(i, type) * DX(x, y, i);
-		dy += interaction(i, type) * DY(x, y, i);
+		if(XYCORRECTIONCHECKER(x, y)) {
+			dx += interaction(i, type) * DX(x, y, i);
+			dy += interaction(i, type) * DY(x, y, i);
+		}
+		TRACE("environment", "Gradient counted.\n\
+field[x + 1][y][type] = %.3f, field[x][y][type] = %.3f\n\
+field[x][y + 1][type] = %.3f, field[x][y][type] = %.3f\n\
+x = %d, y = %d, Source = %d, destination = %d, dx = %.5f; dy = %.5f", 
+field[x + 1][y][i], field[x][y][i], 
+field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 	}
 	if(dx != 0 && dy != 0) {
-		double angleCos = dx / pow( pow(dx, 2.0) + pow(dy, 2.0) , 0.5 );
+		double dr = pow( pow(dx, 2.0) + pow(dy, 2.0) , 0.5 );
+		double angleCos = dx / dr;
 		direction.fi = acos(angleCos);
-		TRACE("environment", "Angle counted. AngleCos = %.2f; angle = %.2f", angleCos, direction.fi);
+		if(dy < 0) {direction.fi = 2 * M_PI - direction.fi;}
+		TRACE("environment", "Angle counted. dx = %.3f, dy = %.3f, dr = %.3f. AngleCos = %.2f; angle = %.2f", dx, dy, dr, angleCos, direction.fi);
 	} else {
 		direction.fi = double(rand()%16) / 16.0 * 2 * M_PI;
 		TRACE("environment", "Random angle");
@@ -54,13 +65,15 @@ struct Direction Environment::getDirection(Coordinates coord, int type) {
 #endif
 	return direction;
 };
+#undef DX
+#undef DY
 
-#define numberOfIterations 20
+#define numberOfIterations 15
 #define h                  1
 #define c                  1
 #define tau                1
-#define d                  0.01
-#define k                  0.01
+#define d                  0.1
+#define k                  0.001
 #define dxxField(x, y)     ( ( field[x + 1][y][type] - 2 * field[x][y][type] + field[x - 1][y][type] ) / double(h * h) )
 #define dyyField(x, y)     ( ( field[x][y + 1][type] - 2 * field[x][y][type] + field[x][y - 1][type] ) / double(c * c) )
 //#define sTotal(x, y)       ( (numberOfSources > 0 ) ? ( TriS(x, y, sources[0].GetX(), sources[0].GetY()) ) : 0 )
@@ -69,6 +82,8 @@ struct Direction Environment::getDirection(Coordinates coord, int type) {
 	for(int i = 0; i < numberOfSources; i++)         \
 		value += TriS(x, y, sources[i].GetX(), sources[i].GetY());*/
 void Environment::solveEquation(int type) {
+	ENTER_FUNCTION("environment", "Environment::solveEquation(int type)", "type = %d", type);
+	printSources();
 	double tmpField[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
@@ -101,12 +116,21 @@ void Environment::addSource(Coordinates coord, int type) {
 	coord.PrintCoordinates();
 	dynamicArrayRealloc(Coordinates, sources, numberOfSources);
 	sources[numberOfSources - 1] = coord;
-	field[sources[numberOfSources - 1].GetX()][sources[numberOfSources - 1].GetY()][type] = 1;
+	int x = sources[numberOfSources - 1].GetX(), y = sources[numberOfSources - 1].GetY();
+	field[x][y][type] = 1;
+	TRACE("environment", "Added source at (%d, %d)", x, y);
+};
+
+void Environment::printSources() {
+	ENTER_FUNCTION("environment", "printSources()", "");
+	//TODO: Add types to sources
+	for(int i = 0; i < numberOfSources; i++)
+		sources[numberOfSources - 1].PrintCoordinates();
 };
 
 // Every tick growth cones signalize themselves and they become sources for next tick.
 void Environment::tick() {
-	ENTER_FUNCTION("environment", "Environment::tick()", "",);
+	ENTER_FUNCTION("environment", "Environment::tick()", "");
 	for(int i = 0; i < NUMBEROFNEURONTYPES; i++)
 		solveEquation(i);
 
@@ -126,10 +150,10 @@ void Environment::tick() {
 	printf("\n");
 #endif
 
-	for(int i = 0; i < NUMBEROFCELLSX; i++)
+/*	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
 			for(int k = 0; k < NUMBEROFNEURONTYPES; k++)
-				field[i][j][k] = 0;
+				field[i][j][k] = 0;*/
 	if(numberOfSources != 0) {
 		delete [] sources;
 	}

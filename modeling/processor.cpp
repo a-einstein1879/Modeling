@@ -7,6 +7,7 @@
 
 
 Processor::Processor() {
+	ENTER_FUNCTION("processor", "Processor::Processor()", "");
 	hippocampus = new Hippocampus[1];
 	ui = new UI[1];
 	ui->addHippocampus(hippocampus);
@@ -27,7 +28,7 @@ void Processor::Tick() {
 #include <ctime>    /* For time(0) seed */
 void Processor::Run() {
 	ENTER_FUNCTION("processor", "Processor::Run()", "");
-	srand(time(0));
+	srand((unsigned int)time(0));
 	int i = 0;
 	while(i < WORKTIME) {
 		i++;

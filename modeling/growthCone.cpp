@@ -23,9 +23,11 @@ void GrowthCone::setNeuronType(int Type) {
 void GrowthCone::tick() {
 	ENTER_FUNCTION("growthCone", "GrowthCone::tick()", "Coordinates are:");
 	coordinates.PrintCoordinates();
+	/*
 	Environment *environment;
 	environment = environment->getEnvironment();
 	environment->addSource(coordinates, neuronType);
+	*/
 };
 
 void GrowthCone::disableGrowth() {
