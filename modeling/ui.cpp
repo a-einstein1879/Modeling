@@ -6,8 +6,8 @@
 
 COLORREF bgColor       = RGB(0,   0,   0);
 COLORREF neuronColor   = RGB(0,   255, 0);
-COLORREF axonColor     = RGB(255, 0,   0);
-COLORREF dendriteColor = RGB(0,   0,   255);
+COLORREF axonColor     = RGB(0,   0,   255);
+COLORREF dendriteColor = RGB(255, 0,   0);
 LRESULT CALLBACK WndProcedure(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
 
@@ -95,7 +95,9 @@ void UI::print2Dpicture() {
 
 #ifdef CLUI
 #ifdef TRACEINFILE
-//	if(system("CLS")) system("clear");
+#ifndef STEPBYSTEP
+	if(system("CLS")) system("clear");
+#endif
 #endif
 	for(int j = 0; j < NUMBEROFCELLSY; j++) {
 		for(int i = 0; i < NUMBEROFCELLSX; i++)

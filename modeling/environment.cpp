@@ -40,16 +40,16 @@ struct Direction Environment::getDirection(Coordinates coord, int type) {
 	int x = coord.GetX(), y = coord.GetY();
 	double dx = 0, dy = 0;
 	for(int i = 0; i < NUMBEROFNEURONTYPES; i++) {
-		if(XYCORRECTIONCHECKER(x, y)) {
+		if( (x > 0) && (y > 0) && x < NUMBEROFCELLSX - 1 && y < NUMBEROFCELLSY - 1 ) {
 			dx += interaction(i, type) * DX(x, y, i);
 			dy += interaction(i, type) * DY(x, y, i);
-		}
-		TRACE("environment", "Gradient counted.\n\
+			TRACE("environment", "Gradient counted.\n\
 field[x + 1][y][type] = %.3f, field[x][y][type] = %.3f\n\
 field[x][y + 1][type] = %.3f, field[x][y][type] = %.3f\n\
 x = %d, y = %d, Source = %d, destination = %d, dx = %.5f; dy = %.5f", 
 field[x + 1][y][i], field[x][y][i], 
 field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
+		}
 	}
 	if(dx != 0 && dy != 0) {
 		double dr = pow( pow(dx, 2.0) + pow(dy, 2.0) , 0.5 );

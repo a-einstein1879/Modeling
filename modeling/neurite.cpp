@@ -146,8 +146,8 @@ double Axon::solveEquation(int growthConeId) {
 	double length = getGrowthConeDistance(growthConeId);
 	delta = alpha * c0 * exp ( ( k - T / Vat ) * length ) - betta;
 	TRACE("neurite", "Solved axon equation of neuron with id %d and growth cone id %d. Delta = %.2f", NeuronId, growthConeId, delta);
-	//return delta;
-	return 2;
+	return delta;
+	//return 2;
 };
 
 int Axon::solveEmbranchmentEquation(int growthConeId) {

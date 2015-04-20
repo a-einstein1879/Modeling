@@ -31,7 +31,7 @@
                                                                     \
 	delete [] tmpArrayName
 
-#define XYCORRECTIONCHECKER(x, y) ( ( (x >= 0) && (y >= 0) && x <= NUMBEROFCELLSX && y <= NUMBEROFCELLSY ) ? 1 : 0 )
+#define XYCORRECTIONCHECKER(x, y) ( ( (x >= 0) && (y >= 0) && x < NUMBEROFCELLSX && y < NUMBEROFCELLSY ) ? 1 : 0 )
 
 #include <stdio.h>
 #include <cstring> // For strlen
