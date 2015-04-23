@@ -21,6 +21,9 @@ private:
 	void create2Dpicture();
 	void print2Dpicture();
 	void getHippocampusCoordinates();
+
+	double environmentField[NUMBEROFCELLSX][NUMBEROFCELLSY][NUMBEROFNEURONTYPES];
+	void printEnvironment();
 public:
 	UI();
 	~UI();

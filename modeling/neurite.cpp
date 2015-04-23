@@ -115,7 +115,9 @@ void Neurite::printTerminationStats(int growthConeId) {
 	double length = growthCones[growthConeId].getSomaDistance() - growthCones[growthConeId].getPreviousLevelLength();
 	TRACE("neurite", "Soma dist = %.2f. Previous length = %.2f", growthCones[growthConeId].getSomaDistance(), growthCones[growthConeId].getPreviousLevelLength());
 	TRACE("neurite", "Level %d terminated. Length = %.2f", co, length);
-	STATISTICS("%d\t%.2f", co, length);
+#ifdef LENGTHSTATISTICS
+	LENGTHSTATISTIC("%d\t%.2f", co, length);
+#endif
 };
 
 #include <stdlib.h> /* For rand() */

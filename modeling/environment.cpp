@@ -68,7 +68,7 @@ field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 #undef DX
 #undef DY
 
-#define numberOfIterations 15
+#define numberOfIterations 25
 #define h                  1
 #define c                  1
 #define tau                1
@@ -84,7 +84,6 @@ field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 void Environment::solveEquation(int type) {
 	ENTER_FUNCTION("environment", "Environment::solveEquation(int type)", "type = %d", type);
 	printSources();
-	double tmpField[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
 				tmpField[i][j] = 0;
@@ -128,27 +127,15 @@ void Environment::printSources() {
 		sources[numberOfSources - 1].PrintCoordinates();
 };
 
+double Environment::getField(int x, int y, int type) {
+	return field[x][y][type];
+};
+
 // Every tick growth cones signalize themselves and they become sources for next tick.
 void Environment::tick() {
 	ENTER_FUNCTION("environment", "Environment::tick()", "");
 	for(int i = 0; i < NUMBEROFNEURONTYPES; i++)
 		solveEquation(i);
-
-#ifdef DIFFUSIONVISIBLE
-	printf("Type 0:\n");
-	for(int j = 0; j < NUMBEROFCELLSY; j++) {
-		for(int i = 0; i < NUMBEROFCELLSX; i++)
-			printf("%.3f ", field[i][j][0]);
-		printf("\n");
-	}
-	printf("Type 1:\n");
-	for(int j = 0; j < NUMBEROFCELLSY; j++) {
-		for(int i = 0; i < NUMBEROFCELLSX; i++)
-			printf("%.3f ", field[i][j][1]);
-		printf("\n");
-	}
-	printf("\n");
-#endif
 
 /*	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)

@@ -3,12 +3,12 @@
 
 #define NUMBEROFDIMENSIONS 2
 
-#define NUMBEROFCELLSX 300
-#define NUMBEROFCELLSY 300
+#define NUMBEROFCELLSX 800
+#define NUMBEROFCELLSY 800
 
 #define WORKTIME 1000
 
-#define MAXNUMBEROFNEURONS 50
+#define MAXNUMBEROFNEURONS 80
 #define MAXNUMBEROFGROWTHCONES 16
 
 #define INTERACTION00 ( 0.0 )
@@ -19,7 +19,7 @@
 //#define DIFFUSIONVISIBLE
 
 //#define CLUI
-#define GUI
+//#define GUI
 
 //#define STEPBYSTEP
 #define TRACEINFILE
@@ -28,9 +28,17 @@
 //#define CONNECTIONTRACES
 //#define BRANCHINGTRACES
 
-#define LOGFILENAME     "log.txt"
-#define STATISTICSFILE  "log-statistics.txt"
+#define LOGFILENAME     "stat/log.txt"
+//#define LENGTHSTATISTICS
+#ifdef LENGTHSTATISTICS
+#define LENGTHSTATISTICSFILE  "stat/length.txt"
+#endif
+
+#define ENVIRONMENTSTATISTICS
+#ifdef ENVIRONMENTSTATISTICS
+#define ENVIRONMENTSTATISTICSFILE  "stat/environment.txt"
+#endif
 
 #define AXONGROWTH
-//#define DENDRITEGROWTH
+#define DENDRITEGROWTH
 #endif

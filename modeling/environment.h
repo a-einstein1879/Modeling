@@ -50,6 +50,9 @@ private:
 	Coordinates *sources;
 
 	double field[NUMBEROFCELLSX][NUMBEROFCELLSY][NUMBEROFNEURONTYPES];
+	/* Declaration moved here because of stack overflow exception.
+	When we try to get 400x400 array of doubles we need about megabyte in stack that is treated like unusual behavior and it causes exception */
+	double tmpField[NUMBEROFCELLSX][NUMBEROFCELLSY];
 
 	void solveEquation(int type);
 public:
@@ -58,6 +61,8 @@ public:
 	struct Direction getDirection(Coordinates coord, int type);
 	void addSource(Coordinates coord, int type);
 	void printSources();
+
+	double getField(int x, int y, int type);
 
 	void tick();
 };

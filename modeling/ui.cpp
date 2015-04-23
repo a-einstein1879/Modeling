@@ -1,5 +1,6 @@
 #include "ui.h"
 #include "cmn_defines.h"
+#include "environment.h"
 
 #ifdef GUI
 #include <windows.h>
@@ -123,9 +124,49 @@ void UI::getHippocampusCoordinates() {
 		}
 };
 
+void UI::printEnvironment() {
+#if defined(DIFFUSIONVISIBLE) || defined(ENVIRONMENTSTATISTICS)
+	Environment *environment;
+	environment = environment->getEnvironment();
+	for(int x = 0; x < NUMBEROFCELLSX; x++)
+		for(int y = 0; y < NUMBEROFCELLSY; y++)
+			for(int type = 0; type < NUMBEROFNEURONTYPES; type++)
+				environmentField[x][y][type] = environment->getField(x, y, type);
+#endif
+
+#ifdef DIFFUSIONVISIBLE
+	for(int type = 0; type < NUMBEROFNEURONTYPES; type++) {
+		printf("Type %d:\n", type);
+		for(int y = 0; y < NUMBEROFCELLSY; y++) {
+			for(int x = 0; x < NUMBEROFCELLSX; x++)
+				printf("%.3f ", environmentField[x][y][type]);
+			printf("\n");
+		}
+		printf("\n");
+	}
+#endif
+
+#ifdef ENVIRONMENTSTATISTICS
+	FILE *file;
+	fopen_s(&file, ENVIRONMENTSTATISTICSFILE, "a");
+	fprintf(file, "\n");
+	for(int type = 0; type < NUMBEROFNEURONTYPES; type++) {
+		fprintf(file, "Type %d:\n", type);
+		for(int y = 0; y < NUMBEROFCELLSY; y++) {
+			for(int x = 0; x < NUMBEROFCELLSX; x++)
+				fprintf(file, "%.3f ", environmentField[x][y][type]);
+			fprintf(file, "\n");
+		}
+		fprintf(file, "\n");
+	}
+	fclose(file);
+#endif
+};
+
 /* Interface */
 void UI::tick() {
 	ENTER_FUNCTION("GUI", "GUI::tick()", "");
+	printEnvironment();
 	create2Dpicture();
 	print2Dpicture();
 };

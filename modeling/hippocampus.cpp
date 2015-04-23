@@ -108,8 +108,7 @@ Neuron* Hippocampus::getNeuronById(int neuronId) {
 void Hippocampus::tick() {
 	ENTER_FUNCTION("hippocampus", "Hippocampus tick", "");
 	if (numberOfNeurons == 0) {
-		addNeuron(3, 8);
-		addNeuron(1, 5);
+		//addNeuron(NUMBEROFCELLSX/2, NUMBEROFCELLSX/2);
 		for (int i = 0; i < MAXNUMBEROFNEURONS; i++) {
 			addNeuron();
 		}

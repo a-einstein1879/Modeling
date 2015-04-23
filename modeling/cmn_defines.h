@@ -67,9 +67,14 @@
 		}
 #endif
 
-#define STATISTICS(format, ...)             \
-		fopen_s(&log, STATISTICSFILE, "a"); \
+#ifdef LENGTHSTATISTICS
+#define LENGTHSTATISTIC(format, ...)             \
+		fopen_s(&log, LENGTHSTATISTICSFILE, "a"); \
 		fprintf(log, format, __VA_ARGS__);  \
 		fprintf(log, "\n");                 \
 		fclose(log);
+#endif
+
+
+
 #endif
