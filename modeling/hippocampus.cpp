@@ -43,7 +43,7 @@ int Hippocampus::addNeuron(int x, int y) {
 	//TODO: use cell stack to add neuron
 	if (numberOfNeurons < MAXNUMBEROFNEURONS) {
 		bool availability = false, randomity = false;
-		if ((x == -1) && (y == -1)) {x = rand()%NUMBEROFCELLSX; y = rand()%NUMBEROFCELLSY; randomity = true;}
+		if ((x == -1) && (y == -1)) {x = rand()%(NUMBEROFCELLSX - 2) + 1; y = rand()%(NUMBEROFCELLSY - 2) + 1; randomity = true;}
 		if (getFieldType(x, y) == NOTHING) {availability = true;}
 
 		if (availability == true) {
@@ -108,7 +108,8 @@ Neuron* Hippocampus::getNeuronById(int neuronId) {
 void Hippocampus::tick() {
 	ENTER_FUNCTION("hippocampus", "Hippocampus tick", "");
 	if (numberOfNeurons == 0) {
-		//addNeuron(NUMBEROFCELLSX/2, NUMBEROFCELLSX/2);
+		addNeuron(NUMBEROFCELLSX/2 - 50, NUMBEROFCELLSY/2);
+		addNeuron(NUMBEROFCELLSX/2 + 50, NUMBEROFCELLSY/2);
 		for (int i = 0; i < MAXNUMBEROFNEURONS; i++) {
 			addNeuron();
 		}

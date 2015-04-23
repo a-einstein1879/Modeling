@@ -7,6 +7,12 @@ Neurite::Neurite() {
 	numberOfTerminalElements = 0;
 };
 
+Neurite::~Neurite() {
+	if(numberOfGrowthCones != 0) {
+		delete [] growthCones;
+	}
+};
+
 void Neurite::addGrowthCone(int growthConeId) {
 	ENTER_FUNCTION("neurite", "addGrowthCone(int growthConeId)", "growthConeId = %d", growthConeId);
 	dynamicArrayRealloc(GrowthCone, growthCones, numberOfGrowthCones);

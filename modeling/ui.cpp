@@ -151,7 +151,8 @@ void UI::printEnvironment() {
 	fopen_s(&file, ENVIRONMENTSTATISTICSFILE, "a");
 	fprintf(file, "\n");
 	for(int type = 0; type < NUMBEROFNEURONTYPES; type++) {
-		fprintf(file, "Type %d:\n", type);
+	//	fprintf(file, "Type %d:\n", type);
+		fprintf(file, "\n", type);
 		for(int y = 0; y < NUMBEROFCELLSY; y++) {
 			for(int x = 0; x < NUMBEROFCELLSX; x++)
 				fprintf(file, "%.3f ", environmentField[x][y][type]);

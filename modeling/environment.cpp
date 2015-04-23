@@ -68,7 +68,7 @@ field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 #undef DX
 #undef DY
 
-#define numberOfIterations 25
+#define numberOfIterations 150
 #define h                  1
 #define c                  1
 #define tau                1

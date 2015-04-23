@@ -30,6 +30,7 @@ protected:
 	virtual int solveEmbranchmentEquation(int growthConeId) = 0;
 public:
 	Neurite();
+	~Neurite();
 
 	void setCoordinates(Coordinates coord);	//Should be used right after creation and nowhere else
 	void setNeuronId(int newId);
