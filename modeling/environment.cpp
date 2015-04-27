@@ -61,6 +61,8 @@ field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 		direction.fi = double(rand()%16) / 16.0 * 2 * M_PI;
 		TRACE("environment", "Random angle");
 	}
+	/*if(coord.GetX() < NUMBEROFCELLSX / 2) {direction.fi = 0;}
+	else {direction.fi = M_PI/2;}*/
 
 #endif
 	return direction;
