@@ -3,8 +3,8 @@
 
 #define NUMBEROFDIMENSIONS 2
 
-#define NUMBEROFCELLSX 500
-#define NUMBEROFCELLSY 500
+#define NUMBEROFCELLSX 700
+#define NUMBEROFCELLSY 700
 
 #define WORKTIME 500
 
@@ -21,9 +21,10 @@
 //#define CLUI
 #define GUI
 
-#define MEMORYCHECKING
-
+//#define MEMORYCHECKING
 //#define STEPBYSTEP
+//#define TRACESON
+
 #define TRACEINFILE
 //#define CELLSTACKTRACES
 //#define GROWTHCONETRACES

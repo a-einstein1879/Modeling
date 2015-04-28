@@ -5,6 +5,9 @@
 //For pause
 #include <cstdlib>
 
+#ifdef MEMORYCHECKING
+#include <vld.h>
+#endif
 
 Processor::Processor() {
 	ENTER_FUNCTION("processor", "Processor::Processor()", "");

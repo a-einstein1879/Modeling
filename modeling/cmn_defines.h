@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <cstring> // For strlen
 
+#ifdef TRACESON
 #ifdef TRACEINFILE
 //TODO:create trace groups
 //TODO:it`s better to delete log file before program start in program somehow
@@ -75,6 +76,10 @@
 		fclose(log);
 #endif
 
+#else
+#define TRACE(file, format, ...)
+#define ENTER_FUNCTION(file, function, format, ...)
+#endif
 
 
 #endif
