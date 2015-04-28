@@ -14,8 +14,7 @@ Neuron::Neuron() {
 	if (NeuronCounter < MAXNUMBEROFNEURONS) {
 		NeuronId = NeuronCounter++;
 	};
-	neuronType = NeuronId;
-	//rand()%NUMBEROFNEURONTYPES;
+	neuronType = rand()%NUMBEROFNEURONTYPES;
 
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
