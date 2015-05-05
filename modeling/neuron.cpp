@@ -15,6 +15,9 @@ Neuron::Neuron() {
 		NeuronId = NeuronCounter++;
 	};
 	neuronType = rand()%NUMBEROFNEURONTYPES;
+#ifdef CONNECTIVITYTEST1
+	neuronType = NeuronId;
+#endif
 
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
@@ -97,7 +100,7 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 
 	connections[numberOfConnections - 1].neuron = neuron;
 
-	connections[numberOfConnections - 1].delay  = (int)axons[0].getGrowthConeDistance(growthConeId);;
+	connections[numberOfConnections - 1].delay  = (int)axons[0].getGrowthConeDistance(growthConeId);
 		//(int)axons->getGrowthConeDistance(growthConeId);
 	
 #ifdef CONNECTIONTRACES
@@ -112,6 +115,7 @@ void Neuron::tick() {
 	environment = environment->getEnvironment();
 	environment->addSource(coord, neuronType);
 
+#ifndef CONNECTIVITYTEST1
 #ifdef AXONGROWTH
 	if(numberOfAxons != 0) {
 		for(int i = 0; i < numberOfAxons; i++)
@@ -127,6 +131,23 @@ void Neuron::tick() {
 			dendrites[i].tick();
 	} else {
 		addDendrite(coord);
+	}
+#endif
+#else
+	if(NeuronId == 0) {
+		if(numberOfAxons != 0) {
+			for(int i = 0; i < numberOfAxons; i++)
+				axons[i].tick();
+		} else { 
+			addAxon(coord);
+		}
+	} else {
+		if(numberOfDendrites != 0) {
+			for(int i = 0; i < numberOfDendrites; i++)
+				dendrites[i].tick();
+		} else {
+			addDendrite(coord);
+		}
 	}
 #endif
 };

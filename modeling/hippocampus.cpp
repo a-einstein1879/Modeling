@@ -22,17 +22,19 @@ void Hippocampus::checkStack() {
 	CellStack *cellStack = cellStack->getStack();
 	while(!cellStack->isEmpty()) {
 		Cell cell = cellStack->stackPull();
-		switch(neuronType[cell.coordinates.GetX()][cell.coordinates.GetY()])
+		int x = cell.coordinates.GetX();
+		int y = cell.coordinates.GetY();
+		switch(neuronType[x][y])
 		{
 		case NOTHING:
 			// Case field is clear
-            fillField(cell.coordinates.GetX(), cell.coordinates.GetY(), cell.cellType, cell.NeuronId);
+            fillField(x, y, cell.cellType, cell.NeuronId);
 			break;
-		case AXON:
+		case DENDRITE:
 			// Case we need to create a new connection
-			if(cell.NeuronId != neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]) {
+			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == AXON) {
 				Neuron* source      = getNeuronById(cell.NeuronId);
-				Neuron* destination = getNeuronById(neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]);
+				Neuron* destination = getNeuronById(neuronIds[x][y]);
 				source->addConnection(cell.growthConeId, destination);
 #ifdef CONNECTIONTRACES
 				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
@@ -115,8 +117,10 @@ void Hippocampus::tick(int t) {
 	ENTER_FUNCTION("hippocampus", "Hippocampus tick", "");
 	if (numberOfNeurons == 0) {
 		//addNeuron(NUMBEROFCELLSX/2, NUMBEROFCELLSY/2);
-		/*addNeuron(NUMBEROFCELLSX/2 - 50, NUMBEROFCELLSY/2);
-		addNeuron(NUMBEROFCELLSX/2 + 50, NUMBEROFCELLSY/2);*/
+#ifdef CONNECTIVITYTEST1
+		addNeuron(NUMBEROFCELLSX/2 - 50, NUMBEROFCELLSY/2);
+		addNeuron(NUMBEROFCELLSX/2 + 50, NUMBEROFCELLSY/2);
+#endif
 		for (int i = 0; i < MAXNUMBEROFNEURONS; i++) {
 			addNeuron();
 		}
@@ -130,7 +134,20 @@ void Hippocampus::tick(int t) {
 
 void Hippocampus::printConnectivityGraphStatistics() {
 	ENTER_FUNCTION("hippocampus", "printConnectivityGraphStatistics()", "");
-	CONNECTIVITYGRAPHSTATISTIC("Hello, world!");
+	int *numberOfConnections;
+	if(numberOfNeurons != 0) {
+		numberOfConnections = new int[numberOfNeurons];
+
+		for(int i = 0; i < numberOfNeurons; i++) {
+			numberOfConnections[i] = neurons[i].getNumberOfConnections();
+		}
+		CONNECTIVITYGRAPHSTATISTIC("Number of connections:");
+
+		for(int i = 0; i < numberOfNeurons; i++) {
+			CONNECTIVITYGRAPHSTATISTIC("%d\t%d", i, numberOfConnections[i])
+		}
+		delete [] numberOfConnections;
+	}
 };
 
 int Hippocampus::getFieldType(int x, int y) {
