@@ -10,7 +10,7 @@ private:
 	UI *ui;
 	Hippocampus *hippocampus;
 	Environment *environment;
-	void Tick();
+	void Tick(int t);
 public:
 	Processor();
 	void Run();

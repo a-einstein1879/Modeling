@@ -22,17 +22,23 @@ void Hippocampus::checkStack() {
 	CellStack *cellStack = cellStack->getStack();
 	while(!cellStack->isEmpty()) {
 		Cell cell = cellStack->stackPull();
-		if(neuronType[cell.coordinates.GetX()][cell.coordinates.GetY()] == NOTHING) {
+		switch(neuronType[cell.coordinates.GetX()][cell.coordinates.GetY()])
+		{
+		case NOTHING:
 			// Case field is clear
             fillField(cell.coordinates.GetX(), cell.coordinates.GetY(), cell.cellType, cell.NeuronId);
-		} else {
+			break;
+		case AXON:
 			// Case we need to create a new connection
-			Neuron* source      = getNeuronById(cell.NeuronId);
-			Neuron* destination = getNeuronById(neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]);
-			source->addConnection(cell.growthConeId, destination);
+			if(cell.NeuronId != neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]) {
+				Neuron* source      = getNeuronById(cell.NeuronId);
+				Neuron* destination = getNeuronById(neuronIds[cell.coordinates.GetX()][cell.coordinates.GetY()]);
+				source->addConnection(cell.growthConeId, destination);
 #ifdef CONNECTIONTRACES
-			TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
+				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
 #endif
+			}
+			break;
 		}
 	}
 };
@@ -105,10 +111,10 @@ Neuron* Hippocampus::getNeuronById(int neuronId) {
 /*      Interface       */
 /************************/
 
-void Hippocampus::tick() {
+void Hippocampus::tick(int t) {
 	ENTER_FUNCTION("hippocampus", "Hippocampus tick", "");
 	if (numberOfNeurons == 0) {
-		addNeuron(NUMBEROFCELLSX/2, NUMBEROFCELLSY/2);
+		//addNeuron(NUMBEROFCELLSX/2, NUMBEROFCELLSY/2);
 		/*addNeuron(NUMBEROFCELLSX/2 - 50, NUMBEROFCELLSY/2);
 		addNeuron(NUMBEROFCELLSX/2 + 50, NUMBEROFCELLSY/2);*/
 		for (int i = 0; i < MAXNUMBEROFNEURONS; i++) {
@@ -118,7 +124,13 @@ void Hippocampus::tick() {
 	for(int i = 0; i < numberOfNeurons; i++)
 		neurons[i].tick();
 	checkStack();
+	if( (t % CONNECTIVITYGRAPHSTATISTICSRATE) == 1 ) {printConnectivityGraphStatistics();}
 	//if(numberOfNeurons == 0) {addNeuron(2, 5); addNeuron(2, 15); addNeuron(2, 25); addNeuron(7, 25); addNeuron(3, 25);}
+};
+
+void Hippocampus::printConnectivityGraphStatistics() {
+	ENTER_FUNCTION("hippocampus", "printConnectivityGraphStatistics()", "");
+	CONNECTIVITYGRAPHSTATISTIC("Hello, world!");
 };
 
 int Hippocampus::getFieldType(int x, int y) {

@@ -22,8 +22,8 @@ Environment tick is the first tick. While this tick equations are solved and all
 After tick all sources are deleted from environment to be refreshed on next hippocampus tick
 Then happens hippocampus tick where equations for all neurons are solved. All neurons while ticking signalize themselves to environment
 */
-void Processor::Tick() {
-	hippocampus->tick();
+void Processor::Tick(int t) {
+	hippocampus->tick(t);
 	environment->tick();
 	ui->tick();
 };
@@ -32,11 +32,11 @@ void Processor::Tick() {
 void Processor::Run() {
 	ENTER_FUNCTION("processor", "Processor::Run()", "");
 	srand((unsigned int)time(0));
-	int i = 0;
-	while(i < WORKTIME) {
-		i++;
-		TRACE("processor", "tick(%d)", i);
-		Tick();
+	int t = 0;
+	while(t < WORKTIME) {
+		t++;
+		TRACE("processor", "tick(%d)", t);
+		Tick(t);
 	}
 	system("pause");
 };

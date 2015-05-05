@@ -47,39 +47,41 @@
 		fprintf(log, format, __VA_ARGS__);  \
 		fprintf(log, "\n");                 \
 		fclose(log);
+#else
+#define TRACE(file, format, ...)      \
+		printf(file);                 \
+		printf(".cpp: ");             \
+		printf(format, __VA_ARGS__);  \
+		printf("\n");
+#endif
 
+#else
+#define TRACE(file, format, ...)
+#endif
+
+#if defined(TRACESON) || defined(STATISTICSON)
 #define ENTER_FUNCTION(file, function, format, ...)      \
 		FILE *log;                                       \
 	    TRACE(file, "Entering function %s", function);   \
 		if(strlen(format) != 0) { \
 			TRACE(file, format, __VA_ARGS__); \
 		}
-#else
-#define TRACE(file, format, ...)            \
-		printf(file);                 \
-		printf(".cpp: ");             \
-		printf(format, __VA_ARGS__);  \
-		printf("\n");
-
-#define ENTER_FUNCTION(file, function, format, ...)      \
-	    TRACE(file, "Entering function %s", function);   \
-		if(strlen(format) != 0) { \
-			TRACE(file, format, __VA_ARGS__); \
-		}
 #endif
 
-#ifdef LENGTHSTATISTICS
-#define LENGTHSTATISTIC(format, ...)             \
-		fopen_s(&log, LENGTHSTATISTICSFILE, "a"); \
+#ifdef STATISTICSON
+#define STATISTICS(file, format, ...)       \
+		fopen_s(&log, file, "a");           \
 		fprintf(log, format, __VA_ARGS__);  \
 		fprintf(log, "\n");                 \
 		fclose(log);
+
+#ifdef LENGTHSTATISTICS
+#define LENGTHSTATISTIC(format, ...)  STATISTICS(LENGTHSTATISTICSFILE, format, __VA_ARGS__)
 #endif
 
-#else
-#define TRACE(file, format, ...)
-#define ENTER_FUNCTION(file, function, format, ...)
+#ifdef CONNECTIVITYGRAPHSTATISTICS
+#define CONNECTIVITYGRAPHSTATISTIC(format, ...)  STATISTICS(CONNECTIVITYGRAPHSTATISTICSFILE, format, __VA_ARGS__)
 #endif
-
+#endif
 
 #endif

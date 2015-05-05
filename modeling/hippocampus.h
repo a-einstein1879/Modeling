@@ -20,7 +20,8 @@ private:
 public:
 	Hippocampus();
 	int getFieldType(int x, int y);
-	void tick();
+	void printConnectivityGraphStatistics();
+	void tick(int t);
 };
 
 #endif
