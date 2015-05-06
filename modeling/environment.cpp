@@ -55,6 +55,8 @@ field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 		double dr = pow( pow(dx, 2.0) + pow(dy, 2.0) , 0.5 );
 		double angleCos = dx / dr;
 		direction.fi = acos(angleCos);
+		// Added some randomity to all directions
+		direction.fi += double( rand()%8 - 4 ) * ( M_PI / 4 );
 		if(dy < 0) {direction.fi = 2 * M_PI - direction.fi;}
 		TRACE("environment", "Angle counted. dx = %.3f, dy = %.3f, dr = %.3f. AngleCos = %.2f; angle = %.2f", dx, dy, dr, angleCos, direction.fi);
 	} else {
