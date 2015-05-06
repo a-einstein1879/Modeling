@@ -62,6 +62,7 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 			cell.cellType = cellType;
 			cell.NeuronId = NeuronId;
 			cell.growthConeId = growthConeId;
+			cell.makeFull();
 			if(!cellStack->isFull()) {cellStack->stackPush(cell);}
 		}
 		cellStack->PrintStack();

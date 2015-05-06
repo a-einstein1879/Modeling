@@ -32,7 +32,20 @@ void Hippocampus::checkStack() {
 			break;
 		case DENDRITE:
 			// Case we need to create a new connection
+			// Axon can be connected to dendrite
 			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == AXON) {
+				Neuron* source      = getNeuronById(cell.NeuronId);
+				Neuron* destination = getNeuronById(neuronIds[x][y]);
+				source->addConnection(cell.growthConeId, destination);
+#ifdef CONNECTIONTRACES
+				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
+#endif
+			}
+			break;
+		case AXON:
+			// Case we need to create a new connection
+			// Dendrite can be connected to axon
+			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == DENDRITE) {
 				Neuron* source      = getNeuronById(cell.NeuronId);
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
 				source->addConnection(cell.growthConeId, destination);
@@ -135,17 +148,43 @@ void Hippocampus::tick(int t) {
 void Hippocampus::printConnectivityGraphStatistics() {
 	ENTER_FUNCTION("hippocampus", "printConnectivityGraphStatistics()", "");
 	int *numberOfConnections;
+	int totalNumberOfConnections = 0;
+	struct Connections {
+		int sourceId;
+		int destinationId;
+		int delay;
+	};
 	if(numberOfNeurons != 0) {
 		numberOfConnections = new int[numberOfNeurons];
 
 		for(int i = 0; i < numberOfNeurons; i++) {
 			numberOfConnections[i] = neurons[i].getNumberOfConnections();
+			totalNumberOfConnections += numberOfConnections[i];
 		}
 		CONNECTIVITYGRAPHSTATISTIC("Number of connections:");
 
 		for(int i = 0; i < numberOfNeurons; i++) {
 			CONNECTIVITYGRAPHSTATISTIC("%d\t%d", i, numberOfConnections[i])
 		}
+		struct Connections *connections;
+		connections = new struct Connections[totalNumberOfConnections];
+
+		int counter = 0;
+		for(int i = 0; i < numberOfNeurons; i++) {
+			for(int j = 0; j < numberOfConnections[i]; j++) {
+				connections[counter].sourceId      = i;
+				connections[counter].destinationId = neurons[i].getConnectionDestination(j);
+				connections[counter].delay         = neurons[i].getConnectionDelay(j);
+				counter++;
+			}
+		}
+
+		CONNECTIVITYGRAPHSTATISTIC("Source\tDest\tDelay");
+		for(int i = 0; i < totalNumberOfConnections; i++) {
+			CONNECTIVITYGRAPHSTATISTIC("%d\t%d\t%d", connections[i].sourceId, connections[i].destinationId, connections[i].delay);
+		}
+
+		delete [] connections;
 		delete [] numberOfConnections;
 	}
 };

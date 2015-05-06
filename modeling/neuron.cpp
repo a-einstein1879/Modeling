@@ -205,6 +205,14 @@ int Neuron::getNumberOfConnections() {
 	return numberOfConnections;
 };
 
+int Neuron::getConnectionDestination(int connectionId) {
+	return connections[connectionId].neuron->getNeuronId();
+};
+
+int Neuron::getConnectionDelay(int connectionId){
+	return connections[connectionId].delay;
+};
+
 /*struct Connection Neuron::getConnection(int connectionId) {
 	return connections[connectionId];
 };*/

@@ -17,6 +17,7 @@ public:
 	void PrintCoordinates();
 
 	void makeEmpty();
+	void makeFull();
 	bool isEmpty();
 };
 

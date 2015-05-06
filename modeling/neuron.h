@@ -44,6 +44,8 @@ public:
 	Axon getAxon(int neuriteId);
 	Dendrite getDendrite(int neuriteId);
 	int getNumberOfConnections();
+	int getConnectionDestination(int connectionId);
+	int getConnectionDelay(int connectionId);
 	//struct Connection getConnection(int connectionId);
 
 	void tick();
