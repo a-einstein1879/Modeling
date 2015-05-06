@@ -33,7 +33,7 @@ public:
 	void setCoordinates(int x, int y);
 	void setCoordinates(Coordinates tmpCoord);
 
-	int addConnection(int growthConeId, Neuron* neuron);
+	int addConnection(int growthConeId, Neuron* neuron, int extraDelay);
 
 	Neuron& operator=(Neuron &neuron);
 	int getNeuronId();

@@ -19,7 +19,8 @@ public:
 	void SetY(int y);
 	int GetX();
 	int GetY();
-	double findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId); // Helps neurite to find new coordinates
+	double findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId, int somaDistance); // Helps neurite to find new coordinates
+	double findDistanceBetween(double x1, double y1, double x2, double y2);
 };
 
 #endif

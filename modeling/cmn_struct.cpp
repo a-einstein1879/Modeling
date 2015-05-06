@@ -1,12 +1,13 @@
 #include "cmn_struct.h"
 
 Cell& Cell::operator=( Cell &cell ) {
+	IsEmpty      = cell.isEmpty();
 	coordinates  = cell.coordinates;
 	cellType     = cell.cellType;
 	NeuronId     = cell.NeuronId;
 	NeuriteId    = cell.NeuriteId;
 	growthConeId = cell.growthConeId;
-	IsEmpty      = cell.isEmpty();
+	somaDistance = cell.somaDistance;
 	return *this;
 };
 

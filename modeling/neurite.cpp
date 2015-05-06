@@ -91,7 +91,7 @@ void Neurite::growGrowthCone(Coordinates coord, double delta, struct Direction d
 	ENTER_FUNCTION("neurite", "growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId)",
 		"delta = %.2f, direction.fi = %.2f, type = %d, NeuronId = %d, growthConeId = %d", delta, direction.fi, type, NeuronId, growthConeId);
 	Coordinates newCoordinates = coord;
-	double realDelta = newCoordinates.findNewCoordinates(coord, delta, direction, type, NeuronId, growthConeId);
+	double realDelta = newCoordinates.findNewCoordinates(coord, delta, direction, type, NeuronId, growthConeId, 0);
 	if (realDelta != -1) {
 		growthCones[growthConeId].move(newCoordinates, realDelta);
 	}

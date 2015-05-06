@@ -33,7 +33,7 @@ int Coordinates::GetY() {
 #include <math.h> //For sin, cos and pi
 #include "cellStack.h"
 
-double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId) {
+double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId, int somaDistance) {
 	ENTER_FUNCTION("coordinates", "findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId)",
 		"delta = %.2f, direction.fi = %.2f, cellType = %d, NeuronId = %d, growthConeId = %d. Old coordinates:", delta, direction.fi, cellType, NeuronId, growthConeId);
 	oldCoordinates.PrintCoordinates();
@@ -57,12 +57,13 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 			CoordX = tmpCoordX;
 			CoordY = tmpCoordY;
 			Cell cell;
+			cell.makeFull();
 			cell.coordinates.SetX(CoordX);
 			cell.coordinates.SetY(CoordY);
 			cell.cellType = cellType;
 			cell.NeuronId = NeuronId;
 			cell.growthConeId = growthConeId;
-			cell.makeFull();
+			cell.somaDistance = somaDistance + (int)findDistanceBetween((double)CoordX, (double)CoordY, oldX, oldY);
 			if(!cellStack->isFull()) {cellStack->stackPush(cell);}
 		}
 		cellStack->PrintStack();
@@ -76,6 +77,13 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 	TRACE("coordinates", "After finding coordinates real delta is %.2f, new coordinates:", realDelta);
 	PrintCoordinates();
 	return realDelta;
+};
+
+double Coordinates::findDistanceBetween(double x1, double y1, double x2, double y2) {
+	return (x1 == x2 && y1 == y2) ? 0 : pow( 
+		                                pow( double(x1 - x2), 2 ) + 
+		                                pow( double(y1 - y2), 2 )
+										    , 0.5 );
 };
 
 void getTwoDirections(struct Direction direction, struct Direction *twoDirections) {

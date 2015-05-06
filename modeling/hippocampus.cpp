@@ -36,7 +36,7 @@ void Hippocampus::checkStack() {
 			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == AXON) {
 				Neuron* source      = getNeuronById(cell.NeuronId);
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
-				source->addConnection(cell.growthConeId, destination);
+				source->addConnection(cell.growthConeId, destination, cell.somaDistance);
 #ifdef CONNECTIONTRACES
 				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
 #endif
@@ -48,7 +48,7 @@ void Hippocampus::checkStack() {
 			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == DENDRITE) {
 				Neuron* source      = getNeuronById(cell.NeuronId);
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
-				source->addConnection(cell.growthConeId, destination);
+				source->addConnection(cell.growthConeId, destination, cell.somaDistance);
 #ifdef CONNECTIONTRACES
 				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
 #endif

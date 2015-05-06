@@ -80,7 +80,7 @@ int Neuron::addDendrite(Coordinates coordinates) {
 	return 0;
 };
 
-int Neuron::addConnection(int growthConeId, Neuron* neuron) {
+int Neuron::addConnection(int growthConeId, Neuron* neuron, int extraDelay) {
 	ENTER_FUNCTION("neuron", "addConnection(int growthConeId, Neuron* neuron)", "Source: neuronId = %d, Destination: neuronId = %d; growthConeId = %d", NeuronId, neuron->getNeuronId(), growthConeId);
 	Connection *tmpConnections;
 	tmpConnections = new Connection[numberOfConnections];
@@ -100,7 +100,7 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron) {
 
 	connections[numberOfConnections - 1].neuron = neuron;
 
-	connections[numberOfConnections - 1].delay  = (int)axons[0].getGrowthConeDistance(growthConeId);
+	connections[numberOfConnections - 1].delay  = extraDelay + (int)axons[0].getGrowthConeDistance(growthConeId);
 		//(int)axons->getGrowthConeDistance(growthConeId);
 	
 #ifdef CONNECTIONTRACES
