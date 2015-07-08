@@ -6,6 +6,7 @@ GrowthCone::GrowthCone() {
 	somaDistance        = 0;
 	centrifugalOrder    = 1;
 	previousLevelLength = 0;
+	direction = 0;
 };
 
 void GrowthCone::setCoordinates(Coordinates coord) {
@@ -47,6 +48,10 @@ void GrowthCone::move(Coordinates coord, double delta) {
 	printStats();
 };
 
+void GrowthCone::setDirection(double direct) {
+	direction = direct;
+};
+
 void GrowthCone::increaseSomaDistance(double delta) {
 	ENTER_FUNCTION("growthCone", "increaseSomaDistance(double delta)", "delta = %.2f", delta);
 	somaDistance += delta;
@@ -68,6 +73,7 @@ void GrowthCone::increaseCentrifugalOrder() {
 GrowthCone& GrowthCone::operator=(GrowthCone &growthCone) {
 	growthEnabled       = growthCone.isGrowthEnabled();
 	somaDistance        = growthCone.getSomaDistance();
+	direction           = growthCone.getDirection();
 	coordinates         = growthCone.getCoordinates();
 	centrifugalOrder    = growthCone.getCentrifugalOrder();
 	previousLevelLength = growthCone.getPreviousLevelLength();
@@ -77,6 +83,10 @@ GrowthCone& GrowthCone::operator=(GrowthCone &growthCone) {
 
 double GrowthCone::getSomaDistance() {
 	return somaDistance;
+};
+
+double GrowthCone::getDirection() {
+	return direction;
 };
 
 double GrowthCone::getPreviousLevelLength(){

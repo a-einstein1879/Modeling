@@ -66,6 +66,8 @@
 		if(strlen(format) != 0) { \
 			TRACE(file, format, __VA_ARGS__); \
 		}
+#else
+#define ENTER_FUNCTION(file, function, format, ...)
 #endif
 
 #ifdef STATISTICSON
@@ -77,11 +79,18 @@
 
 #ifdef LENGTHSTATISTICS
 #define LENGTHSTATISTIC(format, ...)  STATISTICS(LENGTHSTATISTICSFILE, format, __VA_ARGS__)
+#else
+#define LENGTHSTATISTIC(format, ...)
 #endif
 
 #ifdef CONNECTIVITYGRAPHSTATISTICS
 #define CONNECTIVITYGRAPHSTATISTIC(format, ...)  STATISTICS(CONNECTIVITYGRAPHSTATISTICSFILE, format, __VA_ARGS__)
+#else
+#define CONNECTIVITYGRAPHSTATISTIC(format, ...)
 #endif
+#else
+#define LENGTHSTATISTIC(format, ...)
+#define CONNECTIVITYGRAPHSTATISTIC(format, ...)
 #endif
 
 #endif

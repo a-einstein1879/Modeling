@@ -32,7 +32,7 @@ double interaction(int type1, int type2) {
 #endif
 #define _USE_MATH_DEFINES //for Pi in visual studio 2009 and earlier
 #include <math.h> //For pi
-struct Direction Environment::getDirection(Coordinates coord, int type) {
+struct Direction Environment::getDirection(Coordinates coord, int type, double angle) {
 	ENTER_FUNCTION("environment", "getDirection(Coordinates coord, int type)", "type = %d, coordinates:", type);
 	coord.PrintCoordinates();
 	struct Direction direction;
@@ -54,13 +54,14 @@ field[x][y + 1][i], field[x][y][i], x, y, i, type, dx, dy);
 	if(dx != 0 && dy != 0) {
 		double dr = pow( pow(dx, 2.0) + pow(dy, 2.0) , 0.5 );
 		double angleCos = dx / dr;
-		direction.fi = acos(angleCos);
+		double ang = acos(angleCos);
+		if(dy < 0) {ang = 2 * M_PI - ang;}
+		direction.fi = ( ang + angle * OLDANGLEWEIGHT ) / ( OLDANGLEWEIGHT + 1 );
 		// Added some randomity to all directions
-		direction.fi += double( rand()%8 - 4 ) / 8 * ( M_PI / 4 );
-		if(dy < 0) {direction.fi = 2 * M_PI - direction.fi;}
+		direction.fi += double( rand()%8 - 4 ) / 8 * ( M_PI / 8 );
 		TRACE("environment", "Angle counted. dx = %.3f, dy = %.3f, dr = %.3f. AngleCos = %.2f; angle = %.2f", dx, dy, dr, angleCos, direction.fi);
 	} else {
-		direction.fi = double(rand()%16) / 16.0 * 2 * M_PI;
+		direction.fi = ( double(rand()%16) / 16.0 * 2 * M_PI + angle * OLDANGLEWEIGHT ) / ( OLDANGLEWEIGHT + 1 );
 		TRACE("environment", "Random angle");
 	}
 	/*if(coord.GetX() < NUMBEROFCELLSX / 2) {direction.fi = 0;}

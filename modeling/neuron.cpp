@@ -41,6 +41,10 @@ void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinate
 	ENTER_FUNCTION("neuron", "setCoordinates(int x, int y)", "x = %d, y = %d", x, y);
 	coord.SetX(x);
 	coord.SetY(y);
+#ifdef NEUROGENESIS
+	if(x > NUMBEROFCELLSX / 2) {neuronType = 1;}
+	else {neuronType = 0;}
+#endif
 
 	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:", NeuronId);
 	coord.PrintCoordinates();

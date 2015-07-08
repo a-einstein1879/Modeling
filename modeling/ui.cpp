@@ -5,10 +5,10 @@
 #ifdef GUI
 #include <windows.h>
 
-COLORREF bgColor       = RGB(0,   0,   0);
-COLORREF neuronColor   = RGB(0,   255, 0);
-COLORREF axonColor     = RGB(0,   0,   255);
-COLORREF dendriteColor = RGB(255, 0,   0);
+COLORREF bgColor       = RGB(0,   0,   0  );
+COLORREF neuronColor   = RGB(255, 255, 255);
+COLORREF axonColor     = RGB(0,   255, 0  );
+COLORREF dendriteColor = RGB(255, 0,   0  );
 #endif
 
 UI::UI() {

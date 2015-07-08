@@ -13,6 +13,9 @@ Neurite::~Neurite() {
 	}
 };
 
+#include <stdlib.h> /* For rand() */
+#define _USE_MATH_DEFINES //for Pi in visual studio 2009 and earlier
+#include <math.h>
 void Neurite::addGrowthCone(int growthConeId) {
 	ENTER_FUNCTION("neurite", "addGrowthCone(int growthConeId)", "growthConeId = %d", growthConeId);
 	dynamicArrayRealloc(GrowthCone, growthCones, numberOfGrowthCones);
@@ -24,6 +27,10 @@ void Neurite::addGrowthCone(int growthConeId) {
 	}
 	else {
 		growthCones[numberOfGrowthCones - 1].setCoordinates(coordinates);
+		growthCones[numberOfGrowthCones - 1].setDirection(double( rand()%8 - 4 ) / 8 * ( M_PI * 2 ));
+#ifdef CONNECTIVITYTEST1
+//		growthCones[numberOfGrowthCones - 1].setDirection(M_PI * 2);
+#endif
 		growthCones[numberOfGrowthCones - 1].setNeuronType(neuronType);
 	}
 };
@@ -60,11 +67,12 @@ void Neurite::growNeurite(int growthConeId, double delta, int branching) {
 	if(branching == 1 && numberOfGrowthCones >= MAXNUMBEROFGROWTHCONES) {branching = 0; TRACE("neurite", "Branching disabled. Max number of growth cones exceeded");}
 	if(growthCones[growthConeId].isGrowthEnabled()) {
 		Coordinates oldCoordinates = growthCones[growthConeId].getCoordinates();
+		double oldDirection = growthCones[growthConeId].getDirection();
 
 		//get direction from environment
 		struct Direction direction;
 		Environment *environment = environment->getEnvironment();
-		direction = environment->getDirection(oldCoordinates, neuronType);
+		direction = environment->getDirection(oldCoordinates, neuronType, oldDirection);
 
 		if (branching == 1) {
 			struct Direction twoDirections[2];
@@ -76,8 +84,10 @@ void Neurite::growNeurite(int growthConeId, double delta, int branching) {
 			addGrowthCone(growthConeId);
 
 			growGrowthCone(oldCoordinates, delta, twoDirections[0], type, NeuronId, numberOfGrowthCones - 1);
+			growthCones[numberOfGrowthCones - 1].setDirection(twoDirections[0].fi);
 
 			growGrowthCone(oldCoordinates, delta, twoDirections[1], type, NeuronId, growthConeId);
+			growthCones[growthConeId].setDirection(twoDirections[1].fi);
 		}
 		else {
 			growGrowthCone(oldCoordinates, delta, direction, type, NeuronId, growthConeId);
@@ -121,9 +131,7 @@ void Neurite::printTerminationStats(int growthConeId) {
 	double length = growthCones[growthConeId].getSomaDistance() - growthCones[growthConeId].getPreviousLevelLength();
 	TRACE("neurite", "Soma dist = %.2f. Previous length = %.2f", growthCones[growthConeId].getSomaDistance(), growthCones[growthConeId].getPreviousLevelLength());
 	TRACE("neurite", "Level %d terminated. Length = %.2f", co, length);
-#ifdef LENGTHSTATISTICS
 	LENGTHSTATISTIC("%d\t%.2f", co, length);
-#endif
 };
 
 #include <stdlib.h> /* For rand() */
@@ -152,7 +160,7 @@ double Axon::solveEquation(int growthConeId) {
 	double Vat   = 12;
 	double k     = 0.035;
 	double length = getGrowthConeDistance(growthConeId);
-	delta = alpha * c0 * exp ( ( k - T / Vat ) * length ) - betta;
+	delta = alpha * c0 * pow ( 1 + k * length, 2 ) * exp ( - ( T * length / Vat ) ) - betta;
 	TRACE("neurite", "Solved axon equation of neuron with id %d and growth cone id %d. Delta = %.2f", NeuronId, growthConeId, delta);
 	return delta;
 	//return 110;
@@ -175,8 +183,9 @@ double Dendrite::solveEquation(int growthConeId) {
 	double Vat   = 40;
 	double k     = 0.0001;
 	double length = getGrowthConeDistance(growthConeId);
-	delta = alpha * c0 * pow ( 1 + k * length, 2 ) * exp ( - ( T * length / Vat ) ) - betta;
+	delta = alpha * c0 * exp ( ( k - T / Vat ) * length ) - betta;
 	delta = delta / numberOfGrowthCones;
+	//delta = delta / 2;
 	TRACE("neurite", "Solved dendrite equation of neuron with id %d and growth cone id %d", NeuronId, growthConeId);
 	return delta;
 };
@@ -197,7 +206,7 @@ int Dendrite::solveEmbranchmentEquation(int growthConeId) {
 #ifdef BRANCHINGTRACES
 	TRACE("neurite", "numberOfGrowthCones = %d, gamma = %.2f, branchingProbability = %.2f", numberOfGrowthCones, gamma, branchingProbability);
 #endif
-	double probability = double(rand()%100) / 100;
+	double probability = double(rand()%100 - 10) / 100;
 	TRACE("neurite", "chance = %.2f, %d", probability, probability < branchingProbability);
 	if(probability < branchingProbability) {return 1;};
 	return 0;

@@ -9,6 +9,7 @@ class GrowthCone {
 private:
 	Coordinates coordinates;
 	double somaDistance;
+	double direction;
 	bool growthEnabled;
 
 	int neuronType;
@@ -26,12 +27,14 @@ public:
 	void disableGrowth();
 	bool isGrowthEnabled();
 	void move(Coordinates coord, double delta);
+	void setDirection(double direct);
 
 	void increaseCentrifugalOrder();
 
 	// interface
 	GrowthCone& operator=(GrowthCone &growthCone);
 	double getSomaDistance();
+	double getDirection();
 	double getPreviousLevelLength();
 	Coordinates getCoordinates();
 	int getCentrifugalOrder();

@@ -25,6 +25,8 @@ called self-interaction). The use of a quasi-steady-state approximation will the
 result in heavily distorted dynamics.
 */
 
+#define OLDANGLEWEIGHT 0
+
 #define SOURCERADIUS  0
 
 #if (NUMBEROFDIMENSIONS == 2)
@@ -58,7 +60,7 @@ private:
 public:
 	static Environment* Environment::getEnvironment();
 
-	struct Direction getDirection(Coordinates coord, int type);
+	struct Direction getDirection(Coordinates coord, int type, double angle = 0);
 	void addSource(Coordinates coord, int type);
 	void printSources();
 
