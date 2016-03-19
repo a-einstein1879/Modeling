@@ -13,7 +13,7 @@ public:
 	~CellStack();
 	static CellStack* getStack();
 	int stackPush(Cell cell);
-	Cell stackPull();
+	Cell stackPop();
 	bool isEmpty();
 	bool isFull();
 	void PrintStack();

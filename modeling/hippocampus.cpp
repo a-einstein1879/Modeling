@@ -21,7 +21,7 @@ void Hippocampus::checkStack() {
 	ENTER_FUNCTION("hippocampus", "checkStack()", "", );
 	CellStack *cellStack = cellStack->getStack();
 	while(!cellStack->isEmpty()) {
-		Cell cell = cellStack->stackPull();
+		Cell cell = cellStack->stackPop();
 		Coordinates coordinates;
 		coordinates = cell.getCoordinates();
 		int x = coordinates.GetX();

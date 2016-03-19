@@ -59,7 +59,7 @@ int CellStack::stackPush(Cell cell) {
 	return 1;
 };
 
-Cell CellStack::stackPull() {
+Cell CellStack::stackPop() {
 	ENTER_FUNCTION("cellStack", "stackPull()", "");
 	Cell cell;
 	cell.makeEmpty();
@@ -83,6 +83,7 @@ Cell CellStack::stackPull() {
 			cells[i] = tmpCells[i];
 		}
 
+		delete [] tmpCells;
 
 #ifdef CELLSTACKTRACES
 		TRACE("cellStack", "element successfully pulled from stack. Stack now has %d elements", numberOfCells);
