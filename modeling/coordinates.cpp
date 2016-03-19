@@ -56,14 +56,11 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 
 			CoordX = tmpCoordX;
 			CoordY = tmpCoordY;
-			Cell cell;
-			cell.makeFull();
-			cell.coordinates.SetX(CoordX);
-			cell.coordinates.SetY(CoordY);
-			cell.cellType = cellType;
-			cell.NeuronId = NeuronId;
-			cell.growthConeId = growthConeId;
-			cell.somaDistance = somaDistance + (int)findDistanceBetween((double)CoordX, (double)CoordY, oldX, oldY);
+			Coordinates coord;
+			coord.SetX(CoordX);
+			coord.SetY(CoordY);
+			/* TODO: neurite ID is not defined!!!!!!!!!!!!!!!!!!!! */
+			Cell cell(coord, cellType, NeuronId, -1, growthConeId, somaDistance + (int)findDistanceBetween((double)CoordX, (double)CoordY, oldX, oldY));
 			if(!cellStack->isFull()) {cellStack->stackPush(cell);}
 		}
 		cellStack->PrintStack();

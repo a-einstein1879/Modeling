@@ -6,8 +6,6 @@
 class Cell {
 private:
 	bool IsEmpty;
-public:
-	Cell& operator=( Cell &cell );
 	Coordinates coordinates;
 	//(nothing / neuron / axon / dendrite) (0/1/2/3)
 	int cellType;
@@ -15,11 +13,23 @@ public:
 	int NeuriteId;
 	int growthConeId;
 	int somaDistance;
-	void PrintCoordinates();
+public:
+	Cell();
+	Cell(Coordinates tmpCoordinates, int tmpCellType, int tmpNeuronId, int tmpNeuriteId, int tmpGrowthConeId, int tmpSomaDistance);
+	Cell& operator=( Cell &cell );
 
 	void makeEmpty();
 	void makeFull();
 	bool isEmpty();
+
+	Coordinates getCoordinates();
+	int getCellType();
+	int getNeuronId();
+	int getNeuriteId();
+	int getGrowthConeId();
+	int getSomaDistance();
+
+	void PrintCoordinates();
 };
 
 #endif

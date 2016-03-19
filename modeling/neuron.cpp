@@ -35,6 +35,7 @@ Neuron::~Neuron() {
 	NeuronCounter--;
 	delete [] axons;
 	delete [] dendrites;
+	delete [] connections;
 }
 
 void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinates availability

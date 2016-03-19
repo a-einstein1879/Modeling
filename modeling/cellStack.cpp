@@ -95,6 +95,7 @@ Cell CellStack::stackPull() {
 bool CellStack::isEmpty() {
 	return (numberOfCells == 0)?1:0;
 };
+
 bool CellStack::isFull() {
 	return (numberOfCells == CELLSTACKMAXNUMBEROFCELLS)?1:0;
 };

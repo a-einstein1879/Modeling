@@ -22,21 +22,23 @@ void Hippocampus::checkStack() {
 	CellStack *cellStack = cellStack->getStack();
 	while(!cellStack->isEmpty()) {
 		Cell cell = cellStack->stackPull();
-		int x = cell.coordinates.GetX();
-		int y = cell.coordinates.GetY();
+		Coordinates coordinates;
+		coordinates = cell.getCoordinates();
+		int x = coordinates.GetX();
+		int y = coordinates.GetY();
 		switch(neuronType[x][y])
 		{
 		case NOTHING:
 			// Case field is clear
-            fillField(x, y, cell.cellType, cell.NeuronId);
+			fillField(x, y, cell.getCellType(), cell.getNeuronId());
 			break;
 		case DENDRITE:
 			// Case we need to create a new connection
 			// Axon can be connected to dendrite
-			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == AXON) {
-				Neuron* source      = getNeuronById(cell.NeuronId);
+			if(cell.getNeuronId() != neuronIds[x][y] && cell.getCellType() == AXON) {
+				Neuron* source      = getNeuronById(cell.getNeuronId());
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
-				source->addConnection(cell.growthConeId, destination, cell.somaDistance);
+				source->addConnection(cell.getGrowthConeId(), destination, cell.getSomaDistance());
 #ifdef CONNECTIONTRACES
 				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
 #endif
@@ -45,10 +47,10 @@ void Hippocampus::checkStack() {
 		case AXON:
 			// Case we need to create a new connection
 			// Dendrite can be connected to axon
-			if(cell.NeuronId != neuronIds[x][y] && cell.cellType == DENDRITE) {
-				Neuron* source      = getNeuronById(cell.NeuronId);
+			if(cell.getNeuronId() != neuronIds[x][y] && cell.getCellType() == DENDRITE) {
+				Neuron* source      = getNeuronById(cell.getNeuronId());
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
-				source->addConnection(cell.growthConeId, destination, cell.somaDistance);
+				source->addConnection(cell.getGrowthConeId(), destination, cell.getSomaDistance());
 #ifdef CONNECTIONTRACES
 				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
 #endif
