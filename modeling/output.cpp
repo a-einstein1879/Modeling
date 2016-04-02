@@ -32,7 +32,20 @@ void Output::closeOutputFiles(){
 }
 
 void Output::printToFile(int outputFile, std::string trace) {
-	logFile << trace << std::endl;
+	switch(outputFile) {
+	case LOGFILEID:
+		logFile << trace << std::endl;
+		break;
+	case LENGTHSTATISTICKSFILEID:
+		lenghtStatisticsFile << trace << std::endl;
+		break;
+	case CONNECTIVITYGRAPHSTATICSFILEID:
+		connectivityGraphStatisticsFile << trace << std::endl;
+		break;
+	case ENVIRONMENTSTATISTICSFILEID:
+		environmentStatisticsFile << trace << std::endl;
+		break;
+	}
 }
 
 void Output::enterFunctionTrace(std::string fileName, std::string trace) {
@@ -40,9 +53,12 @@ void Output::enterFunctionTrace(std::string fileName, std::string trace) {
 }
 
 void Output::printTrace(std::string fileName, std::string trace) {
-#ifdef TRACEINFILE
-	//std::cout << fileName << ": " << trace << std::endl;
-#else
+#ifdef TRACESON
+	#ifdef TRACEINFILE
+		printToFile(LOGFILEID, fileName + ": " + trace);
+	#else
+		std::cout << fileName << ": " << trace << std::endl;
+	#endif
 #endif
 }
 

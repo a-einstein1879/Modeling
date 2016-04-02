@@ -23,10 +23,9 @@
 
 //#define MEMORYCHECKING
 //#define STEPBYSTEP
-//#define TRACESON
-//#define STATISTICSON
 //#define NEUROGENESIS
 
+//#define TRACESON
 #define TRACEINFILE
 /* TODO: create trace groups */
 //#define CELLSTACKTRACES
@@ -34,6 +33,7 @@
 //#define CONNECTIONTRACES
 //#define BRANCHINGTRACES
 
+//#define STATISTICSON
 #ifdef STATISTICSON
 #define LENGTHSTATISTICS
 #define ENVIRONMENTSTATISTICS
