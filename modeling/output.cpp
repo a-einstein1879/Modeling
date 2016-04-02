@@ -36,6 +36,7 @@ void Output::printToFile(int outputFile, std::string trace) {
 	case LOGFILEID:
 		logFile << trace << std::endl;
 		break;
+#ifdef STATISTICSON
 	case LENGTHSTATISTICKSFILEID:
 		lenghtStatisticsFile << trace << std::endl;
 		break;
@@ -45,6 +46,7 @@ void Output::printToFile(int outputFile, std::string trace) {
 	case ENVIRONMENTSTATISTICSFILEID:
 		environmentStatisticsFile << trace << std::endl;
 		break;
+#endif
 	}
 }
 

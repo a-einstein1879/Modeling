@@ -15,6 +15,7 @@ class Output {
 private:
 	static Output *p_Output;
 	Output();
+	~Output();
 	
 	std::ofstream logFile;
 	std::ofstream lenghtStatisticsFile;
@@ -24,8 +25,6 @@ private:
 	void openOutputFiles();
 	void closeOutputFiles();
 public:
-	/* TODO: move destructor to private if possible */
-	~Output();
 	static Output* getOutput();
 
 	void enterFunctionTrace(std::string fileName, std::string trace);

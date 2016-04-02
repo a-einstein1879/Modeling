@@ -26,7 +26,7 @@
 //#define NEUROGENESIS
 
 //#define TRACESON
-#define TRACEINFILE
+//#define TRACEINFILE
 /* TODO: create trace groups */
 //#define CELLSTACKTRACES
 //#define GROWTHCONETRACES
