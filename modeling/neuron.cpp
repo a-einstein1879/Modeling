@@ -10,7 +10,8 @@ void Neuron::resetIdCounter() {
 /* For random */
 #include <cstdlib>
 Neuron::Neuron() {
-	ENTER_FUNCTION("neuron", "Neuron::Neuron()", "");
+	output = output->getOutput();
+	ENTER_FUNCTION("neuron", "Neuron::Neuron()");
 	if (NeuronCounter < MAXNUMBEROFNEURONS) {
 		NeuronId = NeuronCounter++;
 	};
@@ -28,7 +29,7 @@ Neuron::Neuron() {
 	numberOfConnections = 0;
 	connections = new Connection[numberOfConnections];
 
-	TRACE("neuron", "Neuron with id %d was created", NeuronId);
+	PRINTTRACE("neuron", "Neuron with id " + std::to_string(NeuronId) + " was created");
 };
 
 Neuron::~Neuron() {
@@ -39,7 +40,7 @@ Neuron::~Neuron() {
 }
 
 void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinates availability
-	ENTER_FUNCTION("neuron", "setCoordinates(int x, int y)", "x = %d, y = %d", x, y);
+	ENTER_FUNCTION("neuron", "setCoordinates(int x, int y). x = " + std::to_string(x) + ", y = " + std::to_string(y));
 	coord.SetX(x);
 	coord.SetY(y);
 #ifdef NEUROGENESIS
@@ -47,20 +48,20 @@ void Neuron::setCoordinates(int x, int y) {//TODO: proper checking of coordinate
 	else {neuronType = 0;}
 #endif
 
-	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:", NeuronId);
+	PRINTTRACE("neuron", "Coordinates of neuron number " + std::to_string(NeuronId) + " were changed. New coordinates are:");
 	coord.PrintCoordinates();
 }
 
 void Neuron::setCoordinates(Coordinates tmpCoord) {//TODO: proper checking of coordinates availability
-	ENTER_FUNCTION("neuron", "setCoordinates(Coordinates tmpCoord)", "");
+	ENTER_FUNCTION("neuron", "setCoordinates(Coordinates tmpCoord)");
     coord = tmpCoord;
 
-	TRACE("neuron", "Coordinates of neuron number %d were changed. New coordinates are:", NeuronId);
+	PRINTTRACE("neuron", "Coordinates of neuron number " + std::to_string(NeuronId) + " were changed. New coordinates are:");
 	coord.PrintCoordinates();
 }
 
 int Neuron::addAxon(Coordinates coordinates) {
-	ENTER_FUNCTION("neuron", "addAxon(Coordinates coordinates)", "");
+	ENTER_FUNCTION("neuron", "addAxon(Coordinates coordinates)");
 	dynamicArrayRealloc(Axon, axons, numberOfAxons);
 
 	axons[numberOfAxons - 1].setType(AXON);
@@ -68,12 +69,12 @@ int Neuron::addAxon(Coordinates coordinates) {
 	axons[numberOfAxons - 1].setNeuronType(neuronType);
 	axons[numberOfAxons - 1].setCoordinates(coordinates);
 	
-	TRACE("neuron", "Neuron id %d now has new axon. The number of axons: %d", NeuronId, numberOfAxons);
+	PRINTTRACE("neuron", "Neuron id " + std::to_string(NeuronId) + " now has new axon. The number of axons: " + std::to_string(numberOfAxons));
 	return 0;
 };
 
 int Neuron::addDendrite(Coordinates coordinates) {
-	ENTER_FUNCTION("neuron", "addDendrite(Coordinates coordinates)", "");
+	ENTER_FUNCTION("neuron", "addDendrite(Coordinates coordinates)");
 	dynamicArrayRealloc(Dendrite, dendrites, numberOfDendrites);
 
 	dendrites[numberOfDendrites - 1].setType(DENDRITE);
@@ -81,12 +82,12 @@ int Neuron::addDendrite(Coordinates coordinates) {
 	dendrites[numberOfDendrites - 1].setNeuronType(neuronType);
 	dendrites[numberOfDendrites - 1].setCoordinates(coordinates);
 	
-	TRACE("neuron", "Neuron id %d now has new dendrite. The number of dendrites: %d", NeuronId, numberOfDendrites);
+	PRINTTRACE("neuron", "Neuron id " + std::to_string(NeuronId) + " now has new dendrite. The number of dendrites: " + std::to_string(numberOfDendrites));
 	return 0;
 };
 
 int Neuron::addConnection(int growthConeId, Neuron* neuron, int extraDelay) {
-	ENTER_FUNCTION("neuron", "addConnection(int growthConeId, Neuron* neuron)", "Source: neuronId = %d, Destination: neuronId = %d; growthConeId = %d", NeuronId, neuron->getNeuronId(), growthConeId);
+	ENTER_FUNCTION("neuron", "addConnection(int growthConeId, Neuron* neuron). Source: neuronId = " + std::to_string(NeuronId) + ", Destination: neuronId = " + std::to_string(neuron->getNeuronId()) + "; growthConeId = " + std::to_string(growthConeId));
 	Connection *tmpConnections;
 	tmpConnections = new Connection[numberOfConnections];
 	for(int i = 0; i < numberOfConnections; i++) {
@@ -104,18 +105,15 @@ int Neuron::addConnection(int growthConeId, Neuron* neuron, int extraDelay) {
 	delete [] tmpConnections;
 
 	connections[numberOfConnections - 1].neuron = neuron;
-
 	connections[numberOfConnections - 1].delay  = extraDelay + (int)axons[0].getGrowthConeDistance(growthConeId);
 		//(int)axons->getGrowthConeDistance(growthConeId);
 	
-#ifdef CONNECTIONTRACES
-	TRACE("neuron", "Neuron id %d now has new connection with delay %d. The number of connections: %d", NeuronId, connections[numberOfConnections - 1].delay, numberOfConnections);
-#endif
+	PRINTTRACE("neuron", "Neuron id " + std::to_string(NeuronId) + " now has new connection with delay " + std::to_string(connections[numberOfConnections - 1].delay) + ". The number of connections: " + std::to_string(numberOfConnections) + "");
 	return 0;
 };
 
 void Neuron::tick() {
-	ENTER_FUNCTION("neuron", "Neuron::tick()", "NeuronId = %d", NeuronId);
+	ENTER_FUNCTION("neuron", "Neuron::tick(). NeuronId = " + std::to_string(NeuronId));
 	Environment *environment;
 	environment = environment->getEnvironment();
 	environment->addSource(coord, neuronType);
@@ -163,12 +161,12 @@ Neuron& Neuron::operator=(Neuron &neuron) {
 	neuronType        = neuron.getNeuronType();
 
 	numberOfAxons     = neuron.getNumberOfAxons();
-	/*for(int i = 0; i < numberOfAxons; i++)
+	for(int i = 0; i < numberOfAxons; i++)
 		axons[i]      = neuron.getAxon(i);
 
 	numberOfDendrites = neuron.getNumberOfDendrites();
 	for(int i = 0; i < numberOfDendrites; i++)
-		dendrites[i]  = neuron.getDendrite(i);*/
+		dendrites[i]  = neuron.getDendrite(i);
 
 	numberOfConnections = neuron.getNumberOfConnections();
 /*	for(int i = 0; i < numberOfConnections; i++) {

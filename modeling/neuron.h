@@ -3,9 +3,11 @@
 
 #include "cmn_struct.h"
 #include "neurite.h"
+#include "connection.h"
 
 class Neuron {
 private:
+	Output *output;
 	int NeuronId;
 	Coordinates coord;
 	int neuronType;
@@ -19,6 +21,7 @@ private:
 	Dendrite *dendrites;
 
 	int numberOfConnections;
+	//Connection *connections;
 	struct Connection {
 		Neuron *neuron;
 		int delay;

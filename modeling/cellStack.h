@@ -2,10 +2,12 @@
 #define CELLSTACK_H
 
 #include "cmn_struct.h"
+#include "output.h"
 
 class CellStack {
 private:
 	static CellStack *p_CellStack;
+	Output *output;
 	int numberOfCells;
 	Cell *cells;
 public:

@@ -4,9 +4,11 @@
 #include "cellStack.h"
 #include "growthCone.h"
 #include "coordinates.h"
+#include "output.h"
 
 class Neurite {
 protected:
+	Output *output;
 	//Axon AXON, dendrite DENDRITE
 	int type;
 	int neuronType;

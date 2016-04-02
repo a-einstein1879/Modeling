@@ -7,10 +7,9 @@
 CellStack* CellStack::p_CellStack = 0;
 
 CellStack::CellStack() {
-	ENTER_FUNCTION("cellStack", "CellStack::CellStack()", "");
-#ifdef CELLSTACKTRACES
-	TRACE("cellStack", "Cell stack created"); 
-#endif
+	output = output->getOutput();
+	ENTER_FUNCTION("cellStack", "CellStack::CellStack()");
+	PRINTTRACE("cellStack", "Cell stack created"); 
 	numberOfCells = 0;
 	cells = new Cell[numberOfCells];
 };
@@ -26,7 +25,7 @@ CellStack* CellStack::getStack() {
 };
 
 int CellStack::stackPush(Cell cell) {
-	ENTER_FUNCTION("cellStack", "stackPush()", "");
+	ENTER_FUNCTION("cellStack", "stackPush()");
 	if (numberOfCells < CELLSTACKMAXNUMBEROFCELLS) {
 		Cell *tmpCells;
 
@@ -47,20 +46,18 @@ int CellStack::stackPush(Cell cell) {
 		delete [] tmpCells;
 
 		cells[numberOfCells - 1] = cell;
-#ifdef CELLSTACKTRACES
-		TRACE("cellStack", "New element successfully pushed. Stack now has %d elements", numberOfCells);
+
+		PRINTTRACE("cellStack", "New element successfully pushed. Stack now has " + std::to_string(numberOfCells) + " elements");
 		cell.PrintCoordinates();
-#endif
+
 		return 0;
 	}
-#ifdef CELLSTACKTRACES
-	TRACE("cellStack", "ERROR:Can`t push to stack max number of elements exceeded");
-#endif
+	PRINTTRACE("cellStack", "ERROR:Can`t push to stack max number of elements exceeded");
 	return 1;
 };
 
 Cell CellStack::stackPop() {
-	ENTER_FUNCTION("cellStack", "stackPull()", "");
+	ENTER_FUNCTION("cellStack", "stackPull()");
 	Cell cell;
 	cell.makeEmpty();
 
@@ -85,10 +82,8 @@ Cell CellStack::stackPop() {
 
 		delete [] tmpCells;
 
-#ifdef CELLSTACKTRACES
-		TRACE("cellStack", "element successfully pulled from stack. Stack now has %d elements", numberOfCells);
+		PRINTTRACE("cellStack", "element successfully pulled from stack. Stack now has " + std::to_string(numberOfCells) + " elements");
 		cell.PrintCoordinates();
-#endif
 	}
 	return cell;
 };
@@ -102,12 +97,10 @@ bool CellStack::isFull() {
 };
 
 void CellStack::PrintStack() {
-	ENTER_FUNCTION("cellStack", "PrintStack", "");
+	ENTER_FUNCTION("cellStack", "PrintStack");
 	for(int i = 0; i < numberOfCells; i++) {
-#ifdef CELLSTACKTRACES
 		//TRACE("cellStack", "");
-		TRACE("cellStack", "Type of element %d is %d, neuronId is %d, growthConeId is %d and coordinates are:", i, cells[i].cellType, cells[i].NeuronId, cells[i].growthConeId);
-		cells[i].coordinates.PrintCoordinates();
-#endif
+		PRINTTRACE("cellStack", "Type of element " + std::to_string(i) + " is " + std::to_string(cells[i].getCellType()) + ", neuronId is " + std::to_string(cells[i].getNeuronId()) + ", growthConeId is " + std::to_string(cells[i].getGrowthConeId()) + " and coordinates are:");
+		cells[i].PrintCoordinates();
 	}
 };

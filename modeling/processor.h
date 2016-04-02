@@ -4,13 +4,15 @@
 #include "ui.h"
 #include "hippocampus.h"
 #include "environment.h"
+#include "output.h"
 
 class Processor {
 private:
 	UI *ui;
 	Hippocampus *hippocampus;
 	Environment *environment;
-	void Tick(int t);
+	Output *output;
+	void tick(int t);
 public:
 	Processor();
 	void Run();

@@ -36,61 +36,10 @@
 #include <stdio.h>
 #include <cstring> // For strlen
 
-#ifdef TRACESON
-#ifdef TRACEINFILE
-//TODO:create trace groups
-//TODO:it`s better to delete log file before program start in program somehow
-#define TRACE(file, format, ...)            \
-		fopen_s(&log, LOGFILENAME, "a");    \
-		fprintf(log, file);                 \
-		fprintf(log, ".cpp: ");             \
-		fprintf(log, format, __VA_ARGS__);  \
-		fprintf(log, "\n");                 \
-		fclose(log);
-#else
-#define TRACE(file, format, ...)      \
-		printf(file);                 \
-		printf(".cpp: ");             \
-		printf(format, __VA_ARGS__);  \
-		printf("\n");
-#endif
-
-#else
-#define TRACE(file, format, ...)
-#endif
-
-#if defined(TRACESON) || defined(STATISTICSON)
-#define ENTER_FUNCTION(file, function, format, ...)      \
-		FILE *log;                                       \
-	    TRACE(file, "Entering function %s", function);   \
-		if(strlen(format) != 0) { \
-			TRACE(file, format, __VA_ARGS__); \
-		}
-#else
-#define ENTER_FUNCTION(file, function, format, ...)
-#endif
-
-#ifdef STATISTICSON
-#define STATISTICS(file, format, ...)       \
-		fopen_s(&log, file, "a");           \
-		fprintf(log, format, __VA_ARGS__);  \
-		fprintf(log, "\n");                 \
-		fclose(log);
-
-#ifdef LENGTHSTATISTICS
-#define LENGTHSTATISTIC(format, ...)  STATISTICS(LENGTHSTATISTICSFILE, format, __VA_ARGS__)
-#else
-#define LENGTHSTATISTIC(format, ...)
-#endif
-
-#ifdef CONNECTIVITYGRAPHSTATISTICS
-#define CONNECTIVITYGRAPHSTATISTIC(format, ...)  STATISTICS(CONNECTIVITYGRAPHSTATISTICSFILE, format, __VA_ARGS__)
-#else
-#define CONNECTIVITYGRAPHSTATISTIC(format, ...)
-#endif
-#else
-#define LENGTHSTATISTIC(format, ...)
-#define CONNECTIVITYGRAPHSTATISTIC(format, ...)
-#endif
+#define PRINTTRACE(fileName, trace)			output->printTrace(fileName, trace)
+#define ERRORTRACE(fileName, trace)			output->printErrorTrace(fileName, trace)
+#define ENTER_FUNCTION(fileName, trace)		output->enterFunctionTrace(fileName, trace)
+#define PRINTSTATISTICS(outputFile, trace)	output->printToFile(outputFile, trace)
+//" + std::to_string(delta) + "
 
 #endif

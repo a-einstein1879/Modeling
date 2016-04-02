@@ -1,6 +1,10 @@
 #include "coordinates.h"
 #include "cmn_defines.h"
 
+Coordinates::Coordinates() {
+	output = output->getOutput();
+}
+
 Coordinates& Coordinates::operator=( Coordinates &coord ) {
 	CoordX = coord.CoordX;
 	CoordY = coord.CoordY;
@@ -8,9 +12,9 @@ Coordinates& Coordinates::operator=( Coordinates &coord ) {
 };
 
 void Coordinates::PrintCoordinates() {
-	ENTER_FUNCTION("coordinates", "PrintCoordinates()", "");
-	TRACE("coordinates", "X = %d; Y = %d", CoordX, CoordY);
-	if(!XYCORRECTIONCHECKER(CoordX, CoordY)) {TRACE("coordinates", "ERROR!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n");}
+	ENTER_FUNCTION("coordinates", "PrintCoordinates()");
+	PRINTTRACE("coordinates", "X = " + std::to_string(CoordX) + "; Y = " + std::to_string(CoordX));
+	if(!XYCORRECTIONCHECKER(CoordX, CoordY)) {ERRORTRACE("coordinates", "ERROR!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n");}
 };
 
 void Coordinates::SetX(int x) {
@@ -34,8 +38,9 @@ int Coordinates::GetY() {
 #include "cellStack.h"
 
 double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId, int somaDistance) {
-	ENTER_FUNCTION("coordinates", "findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId)",
-		"delta = %.2f, direction.fi = %.2f, cellType = %d, NeuronId = %d, growthConeId = %d. Old coordinates:", delta, direction.fi, cellType, NeuronId, growthConeId);
+	ENTER_FUNCTION("coordinates", "findNewCoordinates(Coordinates oldCoordinates, double delta, Direction direction, int cellType, int NeuronId, int growthConeId). delta = " + std::to_string(delta) +
+		", direction.fi = " + std::to_string(direction.fi) + ", cellType = " + std::to_string(cellType) + ", NeuronId = " + std::to_string(NeuronId) +
+		", growthConeId = " + std::to_string(growthConeId) + ". Old coordinates:");
 	oldCoordinates.PrintCoordinates();
 	double realDelta;
 	double oldX = oldCoordinates.GetX();
@@ -71,7 +76,7 @@ double Coordinates::findNewCoordinates(Coordinates oldCoordinates, double delta,
 			realDelta = pow( pow( double(CoordX - oldX), 2 ) + pow( double(CoordY - oldY), 2 ), 0.5 );
 		}
 	}
-	TRACE("coordinates", "After finding coordinates real delta is %.2f, new coordinates:", realDelta);
+	PRINTTRACE("coordinates", "After finding coordinates real delta is " + std::to_string(realDelta) + ", new coordinates:");
 	PrintCoordinates();
 	return realDelta;
 };

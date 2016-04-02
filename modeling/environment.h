@@ -4,6 +4,7 @@
 #include "cmn_struct.h"
 #include "coordinates.h"
 #include "cmn_defines.h"
+#include "output.h"
 
 /*
 In Hentschel and van Ooyen (1999) a model is presented in which growing axons
@@ -47,6 +48,7 @@ class Environment {
 private:
 	Environment();
 	static Environment* p_environment;
+	Output *output;
 
 	int numberOfSources;
 	Coordinates *sources;

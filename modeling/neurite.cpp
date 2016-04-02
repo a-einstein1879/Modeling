@@ -5,19 +5,20 @@
 Neurite::Neurite() {
 	numberOfGrowthCones      = 0;
 	numberOfTerminalElements = 0;
-};
+	output = output->getOutput();
+}
 
 Neurite::~Neurite() {
 	if(numberOfGrowthCones != 0) {
 		delete [] growthCones;
 	}
-};
+}
 
 #include <stdlib.h> /* For rand() */
 #define _USE_MATH_DEFINES //for Pi in visual studio 2009 and earlier
 #include <math.h>
 void Neurite::addGrowthCone(int growthConeId) {
-	ENTER_FUNCTION("neurite", "addGrowthCone(int growthConeId)", "growthConeId = %d", growthConeId);
+	ENTER_FUNCTION("neurite", "addGrowthCone(int growthConeId). growthConeId = " + std::to_string(growthConeId));
 	dynamicArrayRealloc(GrowthCone, growthCones, numberOfGrowthCones);
 	
 	if (growthConeId != -1) {
@@ -33,38 +34,38 @@ void Neurite::addGrowthCone(int growthConeId) {
 #endif
 		growthCones[numberOfGrowthCones - 1].setNeuronType(neuronType);
 	}
-};
+}
 
 void Neurite::setCoordinates(Coordinates coord) {
-	ENTER_FUNCTION("neurite", "setCoordinates(Coordinates coord)", "Neurite NeuronId = %d", NeuronId);
+	ENTER_FUNCTION("neurite", "setCoordinates(Coordinates coord). Neurite NeuronId = " + std::to_string(NeuronId));
 	coordinates = coord;
 	//TODO:Growth cone coordinates shouldn`t be set here. Think where to move initialisation
 	addGrowthCone();
 	growthCones[0].setCoordinates(coordinates);
-};
+}
 
 void Neurite::setNeuronId(int newId) {
-	ENTER_FUNCTION("neurite", "setNeuronId(int newId)", "newId = %d", newId);
+	ENTER_FUNCTION("neurite", "setNeuronId(int newId). newId = " + std::to_string(newId));
 	NeuronId = newId;
-};
+}
 
 void Neurite::setType(int Type) {
-	ENTER_FUNCTION("neurite", "setType(int Type)", "Type = %d", Type);
+	ENTER_FUNCTION("neurite", "setType(int Type). Type = " + std::to_string(Type));
 	type = Type;
-};
+}
 
 void Neurite::setNeuronType(int Type) {
-	ENTER_FUNCTION("neurite", "setNeuronType(int Type)", "Type = %d", Type);
+	ENTER_FUNCTION("neurite", "setNeuronType(int Type). Type = " + std::to_string(Type));
 	neuronType = Type;
-};
+}
 
 double Neurite::getGrowthConeDistance(int growthConeId) {
 	return growthCones[growthConeId].getSomaDistance();
-};
+}
 
 void Neurite::growNeurite(int growthConeId, double delta, int branching) {
-	ENTER_FUNCTION("neurite", "growNeurite(int growthConeId, double delta, bool branching)", "growthConeId = %d, delta = %.2f, branching = %d", growthConeId, delta, branching);
-	if(branching == 1 && numberOfGrowthCones >= MAXNUMBEROFGROWTHCONES) {branching = 0; TRACE("neurite", "Branching disabled. Max number of growth cones exceeded");}
+	ENTER_FUNCTION("neurite", "growNeurite(int growthConeId, double delta, bool branching). growthConeId = " + std::to_string(growthConeId) + ", delta = " + std::to_string(delta) + ", branching = " + std::to_string(branching));
+	if(branching == 1 && numberOfGrowthCones >= MAXNUMBEROFGROWTHCONES) {branching = 0; PRINTTRACE("neurite", "Branching disabled. Max number of growth cones exceeded");}
 	if(growthCones[growthConeId].isGrowthEnabled()) {
 		Coordinates oldCoordinates = growthCones[growthConeId].getCoordinates();
 		double oldDirection = growthCones[growthConeId].getDirection();
@@ -77,9 +78,9 @@ void Neurite::growNeurite(int growthConeId, double delta, int branching) {
 		if (branching == 1) {
 			struct Direction twoDirections[2];
 			getTwoDirections(direction, twoDirections);
-#ifdef BRANCHINGTRACES
-			TRACE("neurite", "It`s time to branch now for neuron with neuron id %d and growth cone id %d", NeuronId, growthConeId);
-#endif
+
+			PRINTTRACE("neurite", "It`s time to branch now for neuron with neuron id " + std::to_string(NeuronId) + " and growth cone id " + std::to_string(growthConeId));
+
 			increaseGrowthConeCentrifugalOrder(growthConeId);
 			addGrowthCone(growthConeId);
 
@@ -95,49 +96,50 @@ void Neurite::growNeurite(int growthConeId, double delta, int branching) {
 			if (branching == -1 && growthCones[growthConeId].isGrowthEnabled()) {disableGrowth(growthConeId);}
 		}
 	}
-};
+}
 
 void Neurite::growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId) {
-	ENTER_FUNCTION("neurite", "growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId)",
-		"delta = %.2f, direction.fi = %.2f, type = %d, NeuronId = %d, growthConeId = %d", delta, direction.fi, type, NeuronId, growthConeId);
+	ENTER_FUNCTION("neurite", "growGrowthCone(Coordinates coord, double delta, struct Direction direction, int type, int NeuronId, int growthConeId). delta = " + std::to_string(delta) +
+		", direction.fi = " + std::to_string(direction.fi) + ", type = " + std::to_string(type) + 
+		", NeuronId = " + std::to_string(NeuronId) + ", growthConeId = " + std::to_string(growthConeId));
 	Coordinates newCoordinates = coord;
 	double realDelta = newCoordinates.findNewCoordinates(coord, delta, direction, type, NeuronId, growthConeId, 0);
 	if (realDelta != -1) {
 		growthCones[growthConeId].move(newCoordinates, realDelta);
 	}
 	else {
-		TRACE("neurite", "realDelta == %.2f; disabling growth", realDelta);
+		PRINTTRACE("neurite", "realDelta == " + std::to_string(realDelta) + "; disabling growth");
 		disableGrowth(growthConeId);
 	}
-};
+}
 
 void Neurite::disableGrowth(int growthConeId) {
-	ENTER_FUNCTION("neurite", "disableGrowth(int growthConeId)", "growthConeId = %d", growthConeId);
+	ENTER_FUNCTION("neurite", "disableGrowth(int growthConeId). growthConeId = " + std::to_string(growthConeId));
 	growthCones[growthConeId].disableGrowth();
 	printTerminationStats(growthConeId);
 	numberOfTerminalElements++;
-	TRACE("neurite", "numberOfTerminalElements for neuron %d neurite is now %d", NeuronId, numberOfTerminalElements);
-};
+	PRINTTRACE("neurite", "numberOfTerminalElements for neuron " + std::to_string(NeuronId) + " neurite is now " + std::to_string(numberOfTerminalElements));
+}
 
 void Neurite::increaseGrowthConeCentrifugalOrder(int growthConeId) {
-	ENTER_FUNCTION("neurite", "increaseGrowthConeCentrifugalOrder(int growthConeId)", "growthConeId = %d", growthConeId);
+	ENTER_FUNCTION("neurite", "increaseGrowthConeCentrifugalOrder(int growthConeId). growthConeId = " + std::to_string(growthConeId));
 	printTerminationStats(growthConeId);
 	growthCones[growthConeId].increaseCentrifugalOrder();
-};
+}
 
 void Neurite::printTerminationStats(int growthConeId) {
-	ENTER_FUNCTION("neurite", "printTerminationStats(int growthConeId)", "");
+	ENTER_FUNCTION("neurite", "printTerminationStats(int growthConeId)");
 	int co = growthCones[growthConeId].getCentrifugalOrder();
 	double length = growthCones[growthConeId].getSomaDistance() - growthCones[growthConeId].getPreviousLevelLength();
-	TRACE("neurite", "Soma dist = %.2f. Previous length = %.2f", growthCones[growthConeId].getSomaDistance(), growthCones[growthConeId].getPreviousLevelLength());
-	TRACE("neurite", "Level %d terminated. Length = %.2f", co, length);
-	LENGTHSTATISTIC("%d\t%.2f", co, length);
-};
+	PRINTTRACE("neurite", "Soma dist = " + std::to_string(growthCones[growthConeId].getSomaDistance()) + ". Previous length = " + std::to_string(growthCones[growthConeId].getPreviousLevelLength()));
+	PRINTTRACE("neurite", "Level " + std::to_string(co) + " terminated. Length = " + std::to_string(length));
+	PRINTSTATISTICS(LENGTHSTATISTICKSFILEID, "" + std::to_string(co) + "\t" + std::to_string(length));
+}
 
 #include <stdlib.h> /* For rand() */
 
 void Neurite::tick() {
-	ENTER_FUNCTION("neurite", "Neurite::tick()", "NeuronId = %d", NeuronId);
+	ENTER_FUNCTION("neurite", "Neurite::tick(). NeuronId = " + std::to_string(NeuronId));
 	double delta;
 	int numberOfGrowthConesBeforeTick = numberOfGrowthCones;
 	for(int i = 0; i < numberOfGrowthConesBeforeTick; i++) {
@@ -146,11 +148,11 @@ void Neurite::tick() {
 			growNeurite(i, delta, solveEmbranchmentEquation(i));
 		}
 	}
-};
+}
 
 #include <math.h>
 double Axon::solveEquation(int growthConeId) {
-	ENTER_FUNCTION("neurite", "Axon::solveEquation(int growthConeId)", "growthConeId = %d", growthConeId);
+	ENTER_FUNCTION("neurite", "Axon::solveEquation(int growthConeId). growthConeId = " + std::to_string(growthConeId));
 	double delta;
 	/* Coefficients below and formulas for growth are taken from Mironov, Semyanov, Kazantsev "Dendrite and axon specific geometrical adaptation in neurite development" */
 	double alpha = 0.5;
@@ -161,19 +163,19 @@ double Axon::solveEquation(int growthConeId) {
 	double k     = 0.035;
 	double length = getGrowthConeDistance(growthConeId);
 	delta = alpha * c0 * pow ( 1 + k * length, 2 ) * exp ( - ( T * length / Vat ) ) - betta;
-	TRACE("neurite", "Solved axon equation of neuron with id %d and growth cone id %d. Delta = %.2f", NeuronId, growthConeId, delta);
+	PRINTTRACE("neurite", "Solved axon equation of neuron with id " + std::to_string(NeuronId) + " and growth cone id " + std::to_string(growthConeId) + ". Delta = " + std::to_string(delta));
 	return delta;
 	//return 110;
-};
+}
 
 int Axon::solveEmbranchmentEquation(int growthConeId) {
 //	return rand()%2;
 	return false;
-};
+}
 
 #include <math.h>
 double Dendrite::solveEquation(int growthConeId) {
-	ENTER_FUNCTION("neurite", "Dendrite::solveEquation(int growthConeId)", "growthConeId = %d", growthConeId);
+	ENTER_FUNCTION("neurite", "Dendrite::solveEquation(int growthConeId). growthConeId = " + std::to_string(growthConeId));
 	double delta;
 	/* Coefficients below and formulas for growth are taken from Mironov, Semyanov, Kazantsev "Dendrite and axon specific geometrical adaptation in neurite development" */
 	double alpha = 1.1;
@@ -186,9 +188,9 @@ double Dendrite::solveEquation(int growthConeId) {
 	delta = alpha * c0 * exp ( ( k - T / Vat ) * length ) - betta;
 	delta = delta / numberOfGrowthCones;
 	//delta = delta / 2;
-	TRACE("neurite", "Solved dendrite equation of neuron with id %d and growth cone id %d", NeuronId, growthConeId);
+	PRINTTRACE("neurite", "Solved dendrite equation of neuron with id " + std::to_string(NeuronId) + " and growth cone id " + std::to_string(growthConeId));
 	return delta;
-};
+}
 
 #include <math.h>
 /* All statistic formulas are taken from Jaap van Pelt, Harry B.M. Uylings "Modeling Neuronal Growth and Shape" - pp 195-215 */
@@ -198,19 +200,19 @@ double Dendrite::solveEquation(int growthConeId) {
 #define gamma (double)growthCones[growthConeId].getCentrifugalOrder()
 #define C(t)  (double)1
 int Dendrite::solveEmbranchmentEquation(int growthConeId) {
-	ENTER_FUNCTION("neurite", "Dendrite::solveEmbranchmentEquation(int growthConeId)", "growthConeId = %d", growthConeId);
+	ENTER_FUNCTION("neurite", "Dendrite::solveEmbranchmentEquation(int growthConeId). growthConeId = " + std::to_string(growthConeId));
 	/* Probability to create terminal segment */
 	//if(rand()%10 / 10 > 0.8) {return -1;};
 	double branchingProbability = D(t) * pow(numberOfGrowthCones, -E) * pow(2, - S * gamma) / C(t);
-	if (branchingProbability > 1 || branchingProbability < 0) {TRACE("neurite", "ERROR!!!!!!!!!!!!!!!!!!branchingProbability < 0 or > 1\n\n\n\n\n\n\n");}
-#ifdef BRANCHINGTRACES
-	TRACE("neurite", "numberOfGrowthCones = %d, gamma = %.2f, branchingProbability = %.2f", numberOfGrowthCones, gamma, branchingProbability);
-#endif
+
+	if (branchingProbability > 1 || branchingProbability < 0) {ERRORTRACE("neurite", "ERROR!!!!!!!!!!!!!!!!!!branchingProbability < 0 or > 1\n\n\n\n\n\n\n");}
+	PRINTTRACE("neurite", "numberOfGrowthCones = " + std::to_string(numberOfGrowthCones) + ", gamma = " + std::to_string(gamma) + ", branchingProbability = " + std::to_string(branchingProbability));
+
 	double probability = double(rand()%100 - 10) / 100;
-	TRACE("neurite", "chance = %.2f, %d", probability, probability < branchingProbability);
+	PRINTTRACE("neurite", "chance = " + std::to_string(probability) + ", " + std::to_string(probability < branchingProbability));
 	if(probability < branchingProbability) {return 1;};
 	return 0;
-};
+}
 #undef E
 #undef D
 #undef S
@@ -228,28 +230,28 @@ Neurite& Neurite::operator=(Neurite &neurite) {
 		growthCones[i] = neurite.getGrowthCone(i);
 	}
 	return *this;
-};
+}
 
 int Neurite::getType() {
 	return type;
-};
+}
 
 int Neurite::getNumberOfGrowthCones() {
 	return numberOfGrowthCones;
-};
+}
 
 GrowthCone Neurite::getGrowthCone(int growthConeId) {
 	return growthCones[growthConeId];
-};
+}
 
 Coordinates Neurite::getCoordinates() {
 	return coordinates;
-};
+}
 
 int Neurite::getNeuronId() {
 	return NeuronId;
-};
+}
 
 int Neurite::getNeuronType() {
 	return neuronType;
-};
+}

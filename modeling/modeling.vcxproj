@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClCompile Include="cellStack.cpp" />
     <ClCompile Include="cmn_struct.cpp" />
+    <ClCompile Include="connection.cpp" />
     <ClCompile Include="coordinates.cpp" />
     <ClCompile Include="environment.cpp" />
     <ClCompile Include="growthCone.cpp" />
@@ -98,6 +99,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="neurite.cpp" />
     <ClCompile Include="neuron.cpp" />
+    <ClCompile Include="output.cpp" />
     <ClCompile Include="processor.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
@@ -105,12 +107,14 @@
     <ClInclude Include="cellStack.h" />
     <ClInclude Include="cmn_defines.h" />
     <ClInclude Include="cmn_struct.h" />
+    <ClInclude Include="connection.h" />
     <ClInclude Include="coordinates.h" />
     <ClInclude Include="environment.h" />
     <ClInclude Include="growthCone.h" />
     <ClInclude Include="hippocampus.h" />
     <ClInclude Include="neurite.h" />
     <ClInclude Include="neuron.h" />
+    <ClInclude Include="output.h" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="ui.h" />

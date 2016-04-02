@@ -4,9 +4,11 @@
 #include "cmn_struct.h"
 #include "coordinates.h"
 #include "environment.h"
+#include "output.h"
 
 class GrowthCone {
 private:
+	Output *output;
 	Coordinates coordinates;
 	double somaDistance;
 	double direction;

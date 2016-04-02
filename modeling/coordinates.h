@@ -1,6 +1,8 @@
 #ifndef COORDINATES_H
 #define COORDINATES_H
 
+#include "output.h"
+
 struct Direction {
 	double fi;
 };
@@ -10,9 +12,11 @@ extern void getTwoDirections(struct Direction direction, struct Direction *twoDi
 
 class Coordinates {
 private:
-   int CoordX;
-   int CoordY;
+	Output *output;
+	int CoordX;
+	int CoordY;
 public:
+	Coordinates();
 	Coordinates& operator=( Coordinates &coord );
 	void PrintCoordinates();
 	void SetX(int x);

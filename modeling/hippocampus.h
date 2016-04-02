@@ -4,11 +4,17 @@
 #include "neuron.h"
 #include "cmn_defines.h"
 #include "cmn_struct.h"
+#include "output.h"
 
 class Hippocampus {
 private:
+	static Hippocampus *p_Hippocampus;
+	Hippocampus();
 	int numberOfNeurons;
 	Neuron *neurons;
+	Output *output;
+
+	/* TODO: Hippocampus must contain cells. It is more logical */
 	int neuronType[NUMBEROFCELLSX][NUMBEROFCELLSY];
 	int neuronIds[NUMBEROFCELLSX][NUMBEROFCELLSY];
 
@@ -18,7 +24,7 @@ private:
 	void createNeuron();
 	Neuron* getNeuronById(int neuronId);
 public:
-	Hippocampus();
+	static Hippocampus* getHippocampus();
 	int getFieldType(int x, int y);
 	void printConnectivityGraphStatistics();
 	void tick(int t);

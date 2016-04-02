@@ -1,6 +1,15 @@
 #include "hippocampus.h"
 #include "neuron.h"
 
+Hippocampus* Hippocampus::p_Hippocampus = 0;
+
+Hippocampus* Hippocampus::getHippocampus() {
+	if(!p_Hippocampus) {
+		p_Hippocampus = new Hippocampus();
+	}
+	return p_Hippocampus;
+}
+
 /* For random */
 #include <cstdlib>
 
@@ -14,11 +23,12 @@ Hippocampus::Hippocampus() {
 	for(int i = 0; i < NUMBEROFCELLSX; i++)
 		for(int j = 0; j < NUMBEROFCELLSY; j++)
 			neuronIds[i][j] = 0;
+	output = output->getOutput();
 };
 
 #include "cellStack.h"
 void Hippocampus::checkStack() {
-	ENTER_FUNCTION("hippocampus", "checkStack()", "", );
+	ENTER_FUNCTION("hippocampus", "checkStack()");
 	CellStack *cellStack = cellStack->getStack();
 	while(!cellStack->isEmpty()) {
 		Cell cell = cellStack->stackPop();
@@ -39,9 +49,9 @@ void Hippocampus::checkStack() {
 				Neuron* source      = getNeuronById(cell.getNeuronId());
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
 				source->addConnection(cell.getGrowthConeId(), destination, cell.getSomaDistance());
-#ifdef CONNECTIONTRACES
-				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
-#endif
+
+				PRINTTRACE("hippocampus", "Added new connection between neuron " + std::to_string(source->getNeuronId()) + " and neuron " + std::to_string(destination->getNeuronId()));
+
 			}
 			break;
 		case AXON:
@@ -51,9 +61,9 @@ void Hippocampus::checkStack() {
 				Neuron* source      = getNeuronById(cell.getNeuronId());
 				Neuron* destination = getNeuronById(neuronIds[x][y]);
 				source->addConnection(cell.getGrowthConeId(), destination, cell.getSomaDistance());
-#ifdef CONNECTIONTRACES
-				TRACE("hippocampus", "Added new connection between neuron %d and neuron %d", source->getNeuronId(), destination->getNeuronId());
-#endif
+
+				PRINTTRACE("hippocampus", "Added new connection between neuron " + std::to_string(source->getNeuronId()) + " and neuron " + std::to_string(destination->getNeuronId()));
+
 			}
 			break;
 		}
@@ -61,7 +71,7 @@ void Hippocampus::checkStack() {
 };
 
 int Hippocampus::addNeuron(int x, int y) {
-	ENTER_FUNCTION("hippocampus", "addNeuron(int x, int y)", "x = %d, y = %d", x, y);
+	ENTER_FUNCTION("hippocampus", "addNeuron(int x, int y). x = " + std::to_string(x) + ", y = " + std::to_string(y));
 	//TODO: fix recursive bug. Add counter to prevent loop
 	//TODO: use cell stack to add neuron
 	if (numberOfNeurons < MAXNUMBEROFNEURONS) {
@@ -78,7 +88,7 @@ int Hippocampus::addNeuron(int x, int y) {
 			if (randomity == true)
 				addNeuron();
 			else {
-				TRACE("hippocampus", "Can`t create neuron here (%d, %d)", x, y);
+				PRINTTRACE("hippocampus", "Can`t create neuron here (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 			}
 		}
 	}
@@ -86,15 +96,15 @@ int Hippocampus::addNeuron(int x, int y) {
 }
 
 void Hippocampus::fillField(int x, int y, char type, int neuronId) {
-	ENTER_FUNCTION("hippocampus", "fillField(int x, int y, char type, int neuronId)", "x = %d, y = %d, type = %d, neuronId = %d", x, y, type, neuronId);
+	ENTER_FUNCTION("hippocampus", "fillField(int x, int y, char type, int neuronId). x = " + std::to_string(x) + ", y = " + std::to_string(y) + ", type = " + std::to_string(type) + ", neuronId = " + std::to_string(neuronId));
 	neuronType[x][y] = type;
 	neuronIds[x][y]  = neuronId;
 
-	TRACE("hippocampus", "Space (%d, %d) is now `%d` type with id %d", x, y, getFieldType(x, y), neuronIds[x][y]);
+	PRINTTRACE("hippocampus", "Space (" + std::to_string(x) + ", " + std::to_string(y) + ") is now `" + std::to_string(getFieldType(x, y)) + "` type with id " + std::to_string(neuronIds[x][y]));
 }
 
 void Hippocampus::createNeuron() {
-	ENTER_FUNCTION("hippocampus", "createNeuron", "numberOfNeurons = %d", numberOfNeurons);
+	ENTER_FUNCTION("hippocampus", "createNeuron. numberOfNeurons = " + std::to_string(numberOfNeurons));
 	if (numberOfNeurons < MAXNUMBEROFNEURONS) {
 		Neuron *tmpNeurons;
 		neurons->resetIdCounter();
@@ -110,7 +120,7 @@ void Hippocampus::createNeuron() {
 
 		delete [] tmpNeurons;
 	}
-	TRACE("hippocampus", "Hippocampus now has %d neurons", numberOfNeurons);
+	PRINTTRACE("hippocampus", "Hippocampus now has " + std::to_string(numberOfNeurons) + " neurons");
 };
 
 Neuron* Hippocampus::getNeuronById(int neuronId) {
@@ -129,7 +139,7 @@ Neuron* Hippocampus::getNeuronById(int neuronId) {
 /************************/
 
 void Hippocampus::tick(int t) {
-	ENTER_FUNCTION("hippocampus", "Hippocampus tick", "");
+	ENTER_FUNCTION("hippocampus", "Hippocampus tick");
 	if (numberOfNeurons == 0) {
 #ifdef CONNECTIVITYTEST1
 		addNeuron(NUMBEROFCELLSX/2 - 50, NUMBEROFCELLSY/2);
@@ -151,7 +161,7 @@ void Hippocampus::tick(int t) {
 };
 
 void Hippocampus::printConnectivityGraphStatistics() {
-	ENTER_FUNCTION("hippocampus", "printConnectivityGraphStatistics()", "");
+	ENTER_FUNCTION("hippocampus", "printConnectivityGraphStatistics()");
 	int *numberOfConnections;
 	int totalNumberOfConnections = 0;
 	struct Connections {
@@ -166,10 +176,10 @@ void Hippocampus::printConnectivityGraphStatistics() {
 			numberOfConnections[i] = neurons[i].getNumberOfConnections();
 			totalNumberOfConnections += numberOfConnections[i];
 		}
-		CONNECTIVITYGRAPHSTATISTIC("Number of connections:");
+		PRINTSTATISTICS(CONNECTIVITYGRAPHSTATICSFILEID, "Number of connections:");
 
 		for(int i = 0; i < numberOfNeurons; i++) {
-			CONNECTIVITYGRAPHSTATISTIC("%d\t%d", i, numberOfConnections[i])
+			PRINTSTATISTICS(CONNECTIVITYGRAPHSTATICSFILEID, std::to_string(i) + "\t" + std::to_string(numberOfConnections[i]));
 		}
 		struct Connections *connections;
 		connections = new struct Connections[totalNumberOfConnections];
@@ -184,9 +194,9 @@ void Hippocampus::printConnectivityGraphStatistics() {
 			}
 		}
 
-		CONNECTIVITYGRAPHSTATISTIC("Source\tDest\tDelay");
+		PRINTSTATISTICS(CONNECTIVITYGRAPHSTATICSFILEID, "Source\tDest\tDelay");
 		for(int i = 0; i < totalNumberOfConnections; i++) {
-			CONNECTIVITYGRAPHSTATISTIC("%d\t%d\t%d", connections[i].sourceId, connections[i].destinationId, connections[i].delay);
+			PRINTSTATISTICS(CONNECTIVITYGRAPHSTATICSFILEID, std::to_string(connections[i].sourceId) + "\t" + std::to_string(connections[i].destinationId) + "\t" + std::to_string(connections[i].delay));
 		}
 
 		delete [] connections;
