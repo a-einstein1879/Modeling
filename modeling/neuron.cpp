@@ -16,9 +16,9 @@ Neuron::Neuron() {
 		NeuronId = NeuronCounter++;
 	};
 	neuronType = rand()%NUMBEROFNEURONTYPES;
-#ifdef CONNECTIVITYTEST1
-	neuronType = NeuronId;
-#endif
+	#ifdef CONNECTIVITYTEST1
+		neuronType = NeuronId;
+	#endif
 
 	numberOfAxons = 0;
 	axons = new Axon[numberOfAxons];
@@ -118,41 +118,41 @@ void Neuron::tick() {
 	environment = environment->getEnvironment();
 	environment->addSource(coord, neuronType);
 
-#ifndef CONNECTIVITYTEST1
-#ifdef AXONGROWTH
-	if(numberOfAxons != 0) {
-		for(int i = 0; i < numberOfAxons; i++)
-			axons[i].tick();
-	} else { 
-		addAxon(coord);
-	}
-#endif
-
-#ifdef DENDRITEGROWTH
-	if(numberOfDendrites != 0) {
-		for(int i = 0; i < numberOfDendrites; i++)
-			dendrites[i].tick();
-	} else {
-		addDendrite(coord);
-	}
-#endif
-#else
-	if(NeuronId == 0) {
+	#ifndef CONNECTIVITYTEST1
+	#ifdef AXONGROWTH
 		if(numberOfAxons != 0) {
 			for(int i = 0; i < numberOfAxons; i++)
 				axons[i].tick();
 		} else { 
 			addAxon(coord);
 		}
-	} else {
+	#endif
+
+	#ifdef DENDRITEGROWTH
 		if(numberOfDendrites != 0) {
 			for(int i = 0; i < numberOfDendrites; i++)
 				dendrites[i].tick();
 		} else {
 			addDendrite(coord);
 		}
-	}
-#endif
+	#endif
+	#else
+		if(NeuronId == 0) {
+			if(numberOfAxons != 0) {
+				for(int i = 0; i < numberOfAxons; i++)
+					axons[i].tick();
+			} else { 
+				addAxon(coord);
+			}
+		} else {
+			if(numberOfDendrites != 0) {
+				for(int i = 0; i < numberOfDendrites; i++)
+					dendrites[i].tick();
+			} else {
+				addDendrite(coord);
+			}
+		}
+	#endif
 };
 
 Neuron& Neuron::operator=(Neuron &neuron) {

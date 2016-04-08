@@ -54,7 +54,18 @@ void Output::enterFunctionTrace(std::string fileName, std::string trace) {
 	printTrace(fileName + ": Entering function", trace);
 }
 
+#include <ctime>
 void Output::printTrace(std::string fileName, std::string trace) {
+	time_t currentTime;
+	struct tm localTime;
+	currentTime = time(NULL);
+	localtime_s(&localTime, &currentTime);
+
+	int Hour   = localTime.tm_hour;
+	int Min    = localTime.tm_min;
+	int Sec    = localTime.tm_sec;
+
+	trace = std::to_string(Hour) + ":" + std::to_string(Min) + ":" + std::to_string(Sec) + ":" + trace;
 #ifdef TRACESON
 	#ifdef TRACEINFILE
 		printToFile(LOGFILEID, fileName + ": " + trace);

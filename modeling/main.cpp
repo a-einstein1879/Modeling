@@ -4,7 +4,7 @@
 #include "cellStack.h"
 #include <stdio.h>
 
-int main() {	
+int main() {	 
 	Processor processor;
 	processor.Run();
 	return 0;

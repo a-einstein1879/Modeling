@@ -29,9 +29,9 @@ void Neurite::addGrowthCone(int growthConeId) {
 	else {
 		growthCones[numberOfGrowthCones - 1].setCoordinates(coordinates);
 		growthCones[numberOfGrowthCones - 1].setDirection(double( rand()%8 - 4 ) / 8 * ( M_PI * 2 ));
-#ifdef CONNECTIVITYTEST1
-//		growthCones[numberOfGrowthCones - 1].setDirection(M_PI * 2);
-#endif
+	#ifdef CONNECTIVITYTEST1
+	//		growthCones[numberOfGrowthCones - 1].setDirection(M_PI * 2);
+	#endif
 		growthCones[numberOfGrowthCones - 1].setNeuronType(neuronType);
 	}
 }
